@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/components/LanguageProvider';
-import { DynamicTemplate } from '@/components/templates/DynamicTemplate';
+import { MasterTemplate } from '@/components/templates/MasterTemplate';
 import { MusicPlayer } from '@/components/invitation/MusicPlayer';
 import { Button } from '@/components/ui/Button';
 import { motion } from 'framer-motion';
@@ -89,37 +89,13 @@ export default function PreviewInvitationPage() {
     );
   }
 
-  const templateProps = {
-    templateId: invitation.template_id || 'greek-door',
-    groomName: invitation.groom_name || 'العريس',
-    brideName: invitation.bride_name || 'العروسة',
-    dateStart: invitation.date_start || new Date().toISOString(),
-    dateEnd: invitation.date_end,
-    venueName: invitation.venue_name || 'اسم القاعة',
-    venueMapUrl: invitation.venue_map_url,
-    message: invitation.message,
-    coverImageUrl: invitation.cover_image_url,
-    rsvpSection: invitation.rsvp_enabled ? (
-      <div className="p-5 bg-white/50 border border-borderBlush rounded-2xl w-full flex flex-col gap-3 text-center">
-        <h3 className="font-bold text-textDark text-lg border-b border-borderBlush pb-3">تأكيد الحضور (RSVP)</h3>
-        <p className="text-sm text-textDark/60 leading-relaxed">
-          هنا سيتمكن الضيوف من إدخال أسمائهم وتأكيد حضورهم وتحديد عدد المرافقين.
-        </p>
-        <Button disabled variant="outline" className="w-full mt-2 font-bold py-3.5">
-          نموذج تأكيد الحضور (مغلق بالمعاينة)
-        </Button>
-      </div>
-    ) : undefined,
-    commentsSection: invitation.comments_enabled ? (
-      <div className="p-5 bg-white/50 border border-borderBlush rounded-2xl w-full flex flex-col gap-3 text-center">
-        <h3 className="font-bold text-textDark text-lg border-b border-borderBlush pb-3">دفتر التهاني والتبريكات</h3>
-        <div className="p-4 bg-white/80 rounded-xl border border-borderBlush/50 text-right text-xs text-textDark/70">
-          <span className="font-bold text-primary block mb-1">اسم الضيف (تجريبي)</span>
-          تهانينا القلبية لكما بمناسبة الزفاف السعيد!
-        </div>
-      </div>
-    ) : undefined,
-    photoAlbumSection: undefined,
+  const previewInvitation = {
+    ...invitation,
+    template_id: invitation.template_id || 'mediterranean-gate',
+    groom_name: invitation.groom_name || 'العريس',
+    bride_name: invitation.bride_name || 'العروسة',
+    date_start: invitation.date_start || new Date().toISOString(),
+    venue_name: invitation.venue_name || 'اسم القاعة',
   };
 
   return (
@@ -135,7 +111,7 @@ export default function PreviewInvitationPage() {
         transition={{ duration: 0.6, ease: 'easeOut' }}
         className="w-full min-h-screen"
       >
-        <DynamicTemplate {...templateProps} />
+        <MasterTemplate invitation={previewInvitation} />
 
         {invitation.music_enabled && (invitation.music_file_url || invitation.music_url) && (
           <MusicPlayer

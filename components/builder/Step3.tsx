@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Toggle } from '@/components/ui/Toggle';
 import { Input } from '@/components/ui/Input';
 import { supabase } from '@/lib/supabase';
-import { Upload, Music, Trash2, Eye } from 'lucide-react';
+import { Upload, Music, Trash2, Eye, Image as ImageIcon, Lock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Step3Props {
@@ -14,6 +14,7 @@ interface Step3Props {
   onChange: (updates: any) => void;
   onBack: () => void;
   onSave: (publish: boolean) => void;
+  onSaveDraft?: () => void;
   isSaving: boolean;
 }
 
@@ -22,11 +23,13 @@ export const Step3: React.FC<Step3Props> = ({
   onChange,
   onBack,
   onSave,
+  onSaveDraft,
   isSaving,
 }) => {
   const { t } = useLanguage();
   const [isUploadingMusic, setIsUploadingMusic] = useState(false);
   const [isUploadingAlbum, setIsUploadingAlbum] = useState(false);
+  const [isPasswordEnabled, setIsPasswordEnabled] = useState(!!data.password);
   const [musicSource, setMusicSource] = useState<'url' | 'file'>(
     data.music_file_url ? 'file' : 'url'
   );
@@ -103,13 +106,13 @@ export const Step3: React.FC<Step3Props> = ({
           />
         </div>
 
-        {/* Comments */}
+        {/* Comments & Signatures */}
         <div className="bg-white border border-borderBlush rounded-2xl p-4 md:p-5 shadow-sm">
           <Toggle
             checked={data.comments_enabled || false}
             onChange={(val) => onChange({ comments_enabled: val })}
-            label={t('enableComments')}
-            description="تفعيل دفتر تهاني وتبريكات يكتب فيه الضيوف رسائلهم."
+            label="دفتر التهاني والتوقيعات"
+            description="تفعيل دفتر يسمح للضيوف بكتابة تهنئة وعمل توقيع للعروسين."
           />
         </div>
 
@@ -211,48 +214,110 @@ export const Step3: React.FC<Step3Props> = ({
           </AnimatePresence>
         </div>
 
-        {/* Photo Album */}
-        <div className="bg-white border border-borderBlush rounded-2xl p-4 md:p-5 shadow-sm">
+        {/* Photo Album (Live) */}
+        <div className="bg-[#FCF9F8] border border-borderBlush rounded-2xl p-4 md:p-5 shadow-sm flex flex-col gap-4">
+          <div className="flex justify-end items-center gap-2 pb-2 text-primary">
+            <h3 className="font-bold text-base text-textDark">ألبوم الصور المباشر</h3>
+            <ImageIcon className="h-5 w-5 text-[#8B1A1A]" />
+          </div>
+
           <Toggle
-            checked={data.photo_album_enabled || false}
-            onChange={(val) => onChange({ photo_album_enabled: val })}
-            label={t('enablePhotoAlbum')}
-            description="إضافة ألبوم صور متحرك للعروسين يظهر في نهاية الدعوة."
+            checked={data.guest_album_enabled || false}
+            onChange={(val) => onChange({ guest_album_enabled: val })}
+            label="تفعيل ألبوم الصور"
+            description="السماح للضيوف برفع صور مباشرة"
           />
+
           <AnimatePresence>
-            {data.photo_album_enabled && (
+            {data.guest_album_enabled && (
               <motion.div
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 className="overflow-hidden"
               >
-                <div className="pt-4 mt-4 border-t border-borderBlush flex flex-col gap-4">
-                  <span className="text-sm font-semibold text-textDark/80">{t('albumPhotos')}</span>
-                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-                    {(data.photo_album_urls || []).map((url: string, index: number) => (
-                      <div key={index} className="aspect-square relative rounded-xl overflow-hidden border border-borderBlush group shadow-sm bg-white">
-                        <img src={url} alt={`Album img ${index}`} className="w-full h-full object-cover" />
-                        <button
-                          type="button"
-                          onClick={() => removeAlbumImage(index)}
-                          className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white"
-                        >
-                          <Trash2 className="h-5 w-5" />
-                        </button>
-                      </div>
-                    ))}
-                    {isUploadingAlbum ? (
-                      <div className="aspect-square flex flex-col items-center justify-center border border-dashed border-borderBlush rounded-xl bg-white/40">
-                        <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-primary" />
-                      </div>
-                    ) : (
-                      <label className="aspect-square flex flex-col items-center justify-center border border-dashed border-borderBlush rounded-xl bg-white/20 hover:bg-white/40 cursor-pointer transition-colors text-center p-2">
-                        <Upload className="h-5 w-5 text-textDark/40 mb-1" />
-                        <span className="text-[10px] text-textDark/60 leading-tight">إضافة صور</span>
-                        <input type="file" accept="image/*" multiple onChange={handleAlbumUpload} className="hidden" />
-                      </label>
-                    )}
+                <div className="pt-5 mt-3 border-t border-borderBlush/60 flex flex-col gap-6">
+                  
+                  {/* Approval System */}
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center gap-2 flex-row-reverse">
+                      <button
+                        type="button"
+                        onClick={() => onChange({ guest_album_approval: 'auto' })}
+                        className={`px-4 py-2 rounded-xl text-sm font-bold transition-all border ${
+                          (data.guest_album_approval || 'auto') === 'auto'
+                            ? 'bg-[#8B1A1A] text-white border-[#8B1A1A] shadow-sm'
+                            : 'bg-white text-textDark border-[#E8D5D5] hover:bg-gray-50'
+                        }`}
+                      >
+                        موافقة تلقائية
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => onChange({ guest_album_approval: 'manual' })}
+                        className={`px-4 py-2 rounded-xl text-sm font-bold transition-all border ${
+                          data.guest_album_approval === 'manual'
+                            ? 'bg-[#8B1A1A] text-white border-[#8B1A1A] shadow-sm'
+                            : 'bg-white text-textDark border-[#E8D5D5] hover:bg-gray-50'
+                        }`}
+                      >
+                        موافقة يدوية
+                      </button>
+                    </div>
+                    <span className="font-semibold text-textDark text-sm">نظام الموافقة</span>
+                  </div>
+
+                  {/* Stop Uploading Toggle */}
+                  <div className="flex items-center justify-between w-full">
+                    <button
+                      type="button"
+                      onClick={() => onChange({ guest_album_stopped: !data.guest_album_stopped })}
+                      className={`flex h-7 w-12 items-center rounded-full p-0.5 transition-colors duration-200 focus:outline-none ${
+                        data.guest_album_stopped ? 'bg-[#8B1A1A] justify-end' : 'bg-[#E8D5D5] justify-start'
+                      }`}
+                    >
+                      <motion.div
+                        layout
+                        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                        className="h-6 w-6 rounded-full bg-white shadow-sm"
+                      />
+                    </button>
+                    <div className="flex flex-col items-end">
+                      <span className="font-semibold text-textDark text-sm flex items-center gap-1.5">
+                        إيقاف الرفع
+                        <Lock className="h-4 w-4 text-[#8B1A1A]" />
+                      </span>
+                      <span className="text-xs text-textDark/60 mt-0.5">منع رفع صور جديدة</span>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-borderBlush/40 pt-4 mt-2">
+                    <span className="text-sm font-semibold text-textDark/80 mb-3 block">{t('albumPhotos')} (رفع مسبق)</span>
+                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                      {(data.photo_album_urls || []).map((url: string, index: number) => (
+                        <div key={index} className="aspect-square relative rounded-xl overflow-hidden border border-borderBlush group shadow-sm bg-white">
+                          <img src={url} alt={`Album img ${index}`} className="w-full h-full object-cover" />
+                          <button
+                            type="button"
+                            onClick={() => removeAlbumImage(index)}
+                            className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white"
+                          >
+                            <Trash2 className="h-5 w-5" />
+                          </button>
+                        </div>
+                      ))}
+                      {isUploadingAlbum ? (
+                        <div className="aspect-square flex flex-col items-center justify-center border border-dashed border-borderBlush rounded-xl bg-white/40">
+                          <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-primary" />
+                        </div>
+                      ) : (
+                        <label className="aspect-square flex flex-col items-center justify-center border border-dashed border-[#8B1A1A]/40 rounded-xl bg-[#8B1A1A]/5 hover:bg-[#8B1A1A]/10 cursor-pointer transition-colors text-center p-2">
+                          <Upload className="h-5 w-5 text-[#8B1A1A]/60 mb-1" />
+                          <span className="text-[10px] text-[#8B1A1A]/80 leading-tight">إضافة صور</span>
+                          <input type="file" accept="image/*" multiple onChange={handleAlbumUpload} className="hidden" />
+                        </label>
+                      )}
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -262,16 +327,41 @@ export const Step3: React.FC<Step3Props> = ({
       </div>
 
       {/* Password */}
-      <div className="flex flex-col gap-2">
-        <Input
-          type="password"
-          label={t('passwordProtect')}
-          value={data.password || ''}
-          onChange={(e) => onChange({ password: e.target.value })}
-          placeholder="اتركها فارغة إذا كنت لا تريد حماية الدعوة بكلمة مرور"
-          className="text-left font-mono"
-          dir="ltr"
+      <div className="bg-white border border-borderBlush rounded-2xl p-4 md:p-5 shadow-sm">
+        <Toggle
+          checked={isPasswordEnabled}
+          onChange={(val) => {
+            setIsPasswordEnabled(val);
+            if (!val) {
+              onChange({ password: '' });
+            }
+          }}
+          label="حماية بكلمة مرور"
+          description="تأمين الدعوة بكلمة مرور بحيث لا يراها إلا من لديه الكلمة."
         />
+        
+        <AnimatePresence>
+          {isPasswordEnabled && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="overflow-hidden"
+            >
+              <div className="pt-4 mt-4 border-t border-borderBlush">
+                <Input
+                  type="password"
+                  label={t('passwordProtect')}
+                  value={data.password || ''}
+                  onChange={(e) => onChange({ password: e.target.value })}
+                  placeholder="أدخل كلمة المرور الخاصة بالدعوة"
+                  className="text-left font-mono"
+                  dir="ltr"
+                />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Mobile fixed nav */}
@@ -283,6 +373,11 @@ export const Step3: React.FC<Step3Props> = ({
           {t('publishInvitation')}
         </Button>
         <div className="flex gap-3">
+          {onSaveDraft && (
+            <Button variant="outline" onClick={onSaveDraft} disabled={isSaving} fullWidth className="text-sm">
+              {t('saveChanges')}
+            </Button>
+          )}
           <Button variant="outline" onClick={onBack} fullWidth>
             {t('back')}
           </Button>
@@ -302,18 +397,23 @@ export const Step3: React.FC<Step3Props> = ({
       {/* Desktop nav */}
       <div className="hidden md:flex flex-col gap-3 mt-6">
         <div className="flex gap-4">
-          <Button variant="outline" onClick={onBack} className="w-1/2">
+          <Button variant="outline" onClick={onBack} className="w-1/3">
             {t('back')}
           </Button>
           <Button
             variant="outline"
             type="button"
             onClick={handlePreview}
-            className="w-1/2 flex items-center justify-center gap-2 border border-borderBlush"
+            className="w-1/3 flex items-center justify-center gap-2 border border-borderBlush"
           >
             <Eye className="h-5 w-5 text-primary" />
             <span>{t('preview')}</span>
           </Button>
+          {onSaveDraft && (
+            <Button variant="outline" onClick={onSaveDraft} disabled={isSaving} className="w-1/3 text-sm">
+              {t('saveChanges')}
+            </Button>
+          )}
         </div>
         <Button onClick={() => onSave(true)} isLoading={isSaving} className="w-full text-lg py-4 font-bold">
           {t('publishInvitation')}

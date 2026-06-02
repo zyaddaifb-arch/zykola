@@ -4,10 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { useLanguage } from '@/components/LanguageProvider';
-import { DynamicTemplate } from '@/components/templates/DynamicTemplate';
-import { RSVPForm } from '@/components/invitation/RSVPForm';
-import { Comments } from '@/components/invitation/Comments';
-import { PhotoAlbum } from '@/components/invitation/PhotoAlbum';
+import { MasterTemplate } from '@/components/templates/MasterTemplate';
 import { MusicPlayer } from '@/components/invitation/MusicPlayer';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -30,9 +27,10 @@ export default function PublicInvitationPage() {
   const [isPasswordVerified, setIsPasswordVerified] = useState(false);
   const [passwordError, setPasswordError] = useState('');
 
-  // Gate Envelope State
+  // Gate Envelope / Animation State
   const [isOpen, setIsOpen] = useState(false);
   const [audioPlay, setAudioPlay] = useState(false);
+  const [isPlayingVideo, setIsPlayingVideo] = useState(false);
 
   useEffect(() => {
     const fetchInvitation = async () => {
@@ -82,9 +80,19 @@ export default function PublicInvitationPage() {
     }
   };
 
-  const handleOpenEnvelope = () => {
-    setIsOpen(true);
-    setAudioPlay(true);
+  const handleOpenInvitation = () => {
+    if (invitation?.animation_enabled && invitation?.opening_style) {
+      setIsPlayingVideo(true);
+      // Fallback: auto open after 6 seconds if video doesn't fire ended event
+      setTimeout(() => {
+        setIsPlayingVideo(false);
+        setIsOpen(true);
+        setAudioPlay(true);
+      }, 6000);
+    } else {
+      setIsOpen(true);
+      setAudioPlay(true);
+    }
   };
 
   if (loading) {
@@ -143,79 +151,9 @@ export default function PublicInvitationPage() {
   }
 
   // Render Gate / Envelope Screen if verified but not clicked open
-  if (!isOpen) {
-    const videoMap: Record<string, string> = {
-      'greek-door': '/videos/greek_door.mp4',
-      'tulips': '/videos/tulip_flowers.mp4',
-      'royal-envelope': '/videos/royal_envelope.mp4',
-      'cinematic': '/videos/cinematic_opening.mp4',
-    };
-    
-    const openingVideo = invitation.animation_enabled !== false 
-      ? videoMap[invitation.opening_style || 'greek-door'] 
-      : null;
-
-    if (openingVideo) {
-      return (
-        <div className="fixed inset-0 z-50 bg-black flex items-center justify-center overflow-hidden h-[100dvh] w-screen">
-          <video
-            id="opening-video"
-            src={openingVideo}
-            className="w-full h-full object-cover"
-            playsInline
-            onEnded={() => setIsOpen(true)}
-            onError={() => {
-              console.error("Failed to load video");
-              setIsOpen(true);
-            }}
-          />
-          
-          <AnimatePresence>
-            {!audioPlay && (
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute inset-0 bg-black/40 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center"
-              >
-                <div className="flex flex-col gap-2 mb-8">
-                  <span className="text-white/80 text-sm uppercase tracking-[4px] font-semibold">دعوة زفاف</span>
-                  <h1 className="text-4xl md:text-5xl font-extrabold text-white font-playfair drop-shadow-lg">
-                    {invitation.groom_name} &amp; {invitation.bride_name}
-                  </h1>
-                </div>
-
-                <Button 
-                  onClick={() => {
-                    const video = document.getElementById('opening-video') as HTMLVideoElement;
-                    if (video) video.play();
-                    setAudioPlay(true);
-                  }} 
-                  className="px-8 py-4 text-lg font-bold rounded-full shadow-[0_0_20px_rgba(255,255,255,0.3)] bg-white text-black hover:bg-gray-100 transition-all"
-                >
-                  <span className="mr-2">افتح الدعوة</span>
-                  <MailOpen className="h-5 w-5 inline-block" />
-                </Button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-          
-          {audioPlay && (
-            <button 
-              onClick={() => setIsOpen(true)}
-              className="absolute top-6 right-6 text-white/70 text-sm font-semibold hover:text-white transition-colors bg-black/40 min-w-[44px] min-h-[44px] flex items-center justify-center px-4 rounded-full backdrop-blur-md z-10"
-            >
-              تخطي
-            </button>
-          )}
-        </div>
-      );
-    }
-
-    // Fallback if no animation enabled
+  if (!isOpen && !isPlayingVideo) {
     return (
-      <div className="min-h-screen bg-[#FDF5F5] flex items-center justify-center p-4 relative overflow-hidden">
-        {/* Decorative backdrop */}
+      <div className="min-h-screen bg-[#FDF5F5] flex items-center justify-center p-4 relative overflow-hidden" dir="rtl">
         <div 
           className="absolute inset-0 opacity-20 pointer-events-none"
           style={{
@@ -244,7 +182,7 @@ export default function PublicInvitationPage() {
             نتشرف بدعوتكم لمشاركتنا فرحة العمر وتفاصيل يومنا السعيد.
           </p>
 
-          <Button onClick={handleOpenEnvelope} className="w-full text-lg py-4 font-bold rounded-full shadow-md">
+          <Button onClick={handleOpenInvitation} className="w-full text-lg py-4 font-bold rounded-full shadow-md">
             <span>افتح الدعوة</span>
             <Heart className="h-5 w-5 fill-white stroke-none" />
           </Button>
@@ -253,30 +191,45 @@ export default function PublicInvitationPage() {
     );
   }
 
-  // Render Template with active sections
-  const templateProps = {
-    templateId: invitation.template_id || 'greek-door',
-    groomName: invitation.groom_name,
-    brideName: invitation.bride_name,
-    dateStart: invitation.date_start,
-    dateEnd: invitation.date_end,
-    venueName: invitation.venue_name,
-    venueMapUrl: invitation.venue_map_url,
-    message: invitation.message,
-    coverImageUrl: invitation.cover_image_url,
-    rsvpSection: invitation.rsvp_enabled ? <RSVPForm invitationId={invitation.id} /> : undefined,
-    commentsSection: invitation.comments_enabled ? <Comments invitationId={invitation.id} /> : undefined,
-    photoAlbumSection: invitation.photo_album_enabled ? <PhotoAlbum urls={invitation.photo_album_urls} /> : undefined,
-  };
+  // Render Video Animation Screen
+  if (isPlayingVideo) {
+    return (
+      <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
+        <video 
+          src={`/videos/${invitation.opening_style}.mp4`} 
+          className="w-full h-full object-cover"
+          autoPlay 
+          muted={false}
+          playsInline
+          onEnded={() => {
+            setIsPlayingVideo(false);
+            setIsOpen(true);
+            setAudioPlay(true);
+          }}
+        />
+        <button 
+          onClick={() => {
+            setIsPlayingVideo(false);
+            setIsOpen(true);
+            setAudioPlay(true);
+          }}
+          className="absolute bottom-10 px-6 py-2 bg-white/20 backdrop-blur-md text-white rounded-full text-sm font-medium hover:bg-white/30 transition-colors"
+        >
+          تخطي
+        </button>
+      </div>
+    );
+  }
 
+  // Render Master Template
   return (
     <motion.div
-      initial={invitation.opening_style === 'slide' ? { y: '100%' } : { opacity: 0 }}
-      animate={invitation.opening_style === 'slide' ? { y: 0 } : { opacity: 1 }}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.8, ease: 'easeOut' }}
       className="w-full min-h-screen"
     >
-      <DynamicTemplate {...templateProps} />
+      <MasterTemplate invitation={invitation} />
 
       {invitation.music_enabled && (invitation.music_file_url || invitation.music_url) && (
         <MusicPlayer 

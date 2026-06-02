@@ -5,8 +5,8 @@ export interface User {
   created_at: string;
 }
 
-export type TemplateId = string;
-export type OpeningStyle = string;
+export type TemplateId = 'al-naseem' | 'al-layl' | 'al-rabi3';
+export type OpeningStyle = 'fade' | 'slide';
 
 export interface Invitation {
   id: string;
@@ -22,7 +22,6 @@ export interface Invitation {
   cover_image_url?: string;
   template_id: TemplateId;
   opening_style: OpeningStyle;
-  animation_enabled?: boolean;
   font_style?: string;
   password?: string;
   is_published: boolean;

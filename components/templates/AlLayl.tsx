@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { MapPin, Share2, Check } from 'lucide-react';
-import { Countdown } from '@/components/invitation/Countdown';
+import React from 'react';
+import { Sparkles } from 'lucide-react';
 
 interface TemplateProps {
   groomName: string;
@@ -20,209 +19,149 @@ interface TemplateProps {
   countdownSection?: React.ReactNode;
 }
 
-const GoldDivider = () => (
-  <div className="flex items-center justify-center gap-2 w-full my-1">
-    <svg width="80" height="12" viewBox="0 0 80 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 6 Q20 0 40 6 Q60 12 80 6" stroke="#D4AF37" strokeWidth="1" fill="none" opacity="0.5"/>
-      <circle cx="40" cy="6" r="2.5" fill="#D4AF37" opacity="0.7"/>
-      <circle cx="25" cy="5" r="1.5" fill="#D4AF37" opacity="0.4"/>
-      <circle cx="55" cy="7" r="1.5" fill="#D4AF37" opacity="0.4"/>
-    </svg>
-  </div>
-);
-
-const GoldDots = () => (
-  <div className="flex items-center justify-center gap-4 my-2">
-    <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] opacity-30" />
-    <span className="w-2 h-2 rounded-full bg-[#D4AF37] opacity-50" />
-    <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] opacity-30" />
-  </div>
-);
-
-const OrnamentBorder = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-  <div className={`relative rounded-2xl p-6 ${className}`} style={{
-    background: 'rgba(255,255,255,0.05)',
-    border: '1px solid rgba(212,175,55,0.25)',
-    boxShadow: '0 2px 20px rgba(0,0,0,0.3), inset 0 0 0 1px rgba(212,175,55,0.1)',
-  }}>
-    <span className="absolute top-2 right-2 text-[#D4AF37] text-xs opacity-40">✦</span>
-    <span className="absolute top-2 left-2 text-[#D4AF37] text-xs opacity-40">✦</span>
-    <span className="absolute bottom-2 right-2 text-[#D4AF37] text-xs opacity-40">✦</span>
-    <span className="absolute bottom-2 left-2 text-[#D4AF37] text-xs opacity-40">✦</span>
-    {children}
-  </div>
-);
-
 export const AlLayl: React.FC<TemplateProps> = ({
-  groomName, brideName, dateStart, dateEnd, venueName, venueMapUrl,
-  message, coverImageUrl, rsvpSection, commentsSection, photoAlbumSection, musicPlayerSection,
+  groomName,
+  brideName,
+  dateStart,
+  dateEnd,
+  venueName,
+  venueMapUrl,
+  message,
+  coverImageUrl,
+  rsvpSection,
+  commentsSection,
+  photoAlbumSection,
+  musicPlayerSection,
+  countdownSection,
 }) => {
-  const [copied, setCopied] = useState(false);
-
   const formatDate = (dateStr: string) => {
     try {
-      return new Date(dateStr).toLocaleDateString('ar-EG', {
-        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+      const d = new Date(dateStr);
+      return d.toLocaleDateString('ar-EG', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
       });
-    } catch { return dateStr; }
-  };
-
-  const formatTime = (dateStr: string) => {
-    try {
-      return new Date(dateStr).toLocaleTimeString('ar-EG', { hour: 'numeric', minute: '2-digit', hour12: true });
-    } catch { return ''; }
-  };
-
-  const handleShare = async () => {
-    if (navigator.share) {
-      await navigator.share({ title: `دعوة زفاف ${groomName} و ${brideName}`, url: window.location.href });
-    } else {
-      await navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+    } catch (e) {
+      return dateStr;
     }
   };
 
   return (
-    <div className="min-h-screen" style={{ background: '#0D0D1E', fontFamily: 'var(--font-cairo), sans-serif' }} dir="rtl">
-      {/* Top Share Bar */}
-      <div className="sticky top-0 z-50 flex items-center justify-between px-4 py-3" style={{ background: '#1a1040' }}>
-        <span className="text-white/60 text-xs font-medium">هذه معاينة فقط — شارك دعوتك</span>
-        <button
-          onClick={handleShare}
-          className="flex items-center gap-2 text-white text-xs font-bold px-4 py-1.5 rounded-full border border-[#D4AF37]/30 transition-all hover:bg-[#D4AF37]/10"
-          style={{ background: 'rgba(212,175,55,0.1)' }}
-        >
-          {copied ? <Check className="h-3.5 w-3.5" /> : <Share2 className="h-3.5 w-3.5" />}
-          <span>{copied ? 'تم النسخ!' : 'شارك الدعوة'}</span>
-        </button>
-      </div>
-
+    <div className="min-h-screen bg-[#1a1a2e] text-[#f5f0e8] font-playfair relative overflow-hidden py-12 px-4 selection:bg-[#D4AF37]/20">
       {/* Stars background */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        {Array.from({ length: 30 }).map((_, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full bg-white"
-            style={{
-              width: Math.random() > 0.8 ? '2px' : '1px',
-              height: Math.random() > 0.8 ? '2px' : '1px',
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              opacity: Math.random() * 0.6 + 0.1,
-            }}
-          />
-        ))}
-      </div>
+      <div 
+        className="absolute inset-0 opacity-30 pointer-events-none"
+        style={{
+          backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="1" fill="%23D4AF37"/><circle cx="10" cy="20" r="0.7" fill="%23D4AF37" opacity="0.5"/><circle cx="70" cy="60" r="0.7" fill="%23D4AF37" opacity="0.6"/></svg>')`,
+        }}
+      />
 
-      <div className="max-w-md mx-auto px-4 pb-16 pt-8 flex flex-col items-center gap-6 relative z-10">
+      <div className="max-w-xl mx-auto bg-black/40 backdrop-blur-md border border-[#D4AF37]/30 rounded-3xl p-8 md:p-12 shadow-2xl relative z-10 text-center flex flex-col items-center">
+        {/* Sparks */}
+        <Sparkles className="h-8 w-8 text-[#D4AF37] mb-4 animate-pulse" />
 
-        <GoldDots />
-        <GoldDots />
-
-        <div className="flex items-center gap-2 text-sm tracking-[6px] font-semibold" style={{ color: '#D4AF37' }}>
-          <span className="text-xs">✦</span>
-          <span>ليلة العمر</span>
-          <span className="text-xs">✦</span>
+        <div className="text-[#D4AF37] font-medium text-lg tracking-wider mb-2 uppercase italic font-playfair">
+          ليلة العمر
         </div>
 
-        {/* Names */}
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-6xl font-bold leading-tight italic" style={{ color: '#D4AF37', fontFamily: 'var(--font-playfair), serif', textShadow: '0 0 30px rgba(212,175,55,0.3)' }}>
+        {/* Groom & Bride Name */}
+        <div className="flex flex-col items-center gap-1 my-6">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-[#D4AF37] drop-shadow-sm font-playfair italic">
             {groomName}
           </h1>
-          <div className="flex items-center gap-3 my-2">
-            <span className="w-10 h-[1px]" style={{ background: 'linear-gradient(to left, transparent, #D4AF37)' }} />
-            <span className="text-2xl font-light" style={{ color: '#D4AF3780' }}>&</span>
-            <span className="w-10 h-[1px]" style={{ background: 'linear-gradient(to right, transparent, #D4AF37)' }} />
-          </div>
-          <h1 className="text-6xl font-bold leading-tight italic" style={{ color: '#D4AF37', fontFamily: 'var(--font-playfair), serif', textShadow: '0 0 30px rgba(212,175,55,0.3)' }}>
+          <span className="text-[#D4AF37]/60 my-2 text-2xl font-serif">&amp;</span>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-[#D4AF37] drop-shadow-sm font-playfair italic">
             {brideName}
           </h1>
         </div>
 
+        {/* Countdown */}
+        {countdownSection && (
+          <div className="w-full my-6">
+            {countdownSection}
+          </div>
+        )}
+
+        {/* Cover Image */}
         {coverImageUrl && (
-          <div className="w-full h-56 rounded-2xl overflow-hidden shadow-lg" style={{ border: '1px solid #D4AF3730' }}>
-            <img src={coverImageUrl} alt="Wedding" className="w-full h-full object-cover" />
+          <div className="w-full h-64 relative rounded-2xl overflow-hidden my-6 border-2 border-[#D4AF37]/50 shadow-lg">
+            <img 
+              src={coverImageUrl} 
+              alt="Wedding Cover" 
+              className="w-full h-full object-cover"
+            />
           </div>
         )}
 
+        {/* Message */}
         {message && (
-          <div className="text-center text-sm leading-loose px-4" style={{ color: '#f0e6c8cc' }}>
-            <span className="text-lg" style={{ color: '#D4AF37' }}>"</span>
-            {message}
-            <span className="text-lg" style={{ color: '#D4AF37' }}>"</span>
+          <div className="my-8 px-4 py-6 border-t border-b border-[#D4AF37]/20 text-lg text-white/95 leading-relaxed font-serif italic max-w-md">
+            &quot;{message}&quot;
           </div>
         )}
 
-        <GoldDivider />
-
-        {/* Date & Venue Card */}
-        <OrnamentBorder className="w-full">
-          <div className="flex flex-col gap-4 items-center text-center">
-            <div className="w-full flex flex-col gap-3">
-              {[
-                { emoji: '📅', text: formatDate(dateStart) },
-                { emoji: '🕐', text: `${formatTime(dateStart)}${dateEnd ? ` — ${formatTime(dateEnd)}` : ''}` },
-                { emoji: '📍', text: venueName },
-              ].map((item, i) => (
-                <div key={i} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(212,175,55,0.15)' }}>
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.1)' }}>
-                    <span className="text-sm">{item.emoji}</span>
-                  </div>
-                  <span className="text-sm font-semibold text-right flex-1" style={{ color: '#f0e6c8' }}>{item.text}</span>
-                </div>
-              ))}
-              {venueMapUrl && (
-                <a href={venueMapUrl} target="_blank" rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm transition-all hover:opacity-90"
-                  style={{ background: '#D4AF37', color: '#0D0D1E' }}>
-                  <MapPin className="h-4 w-4" />
-                  افتح في خرائط جوجل
-                </a>
-              )}
+        {/* Date and Time Details */}
+        <div className="my-6 flex flex-col gap-3">
+          <div className="text-sm uppercase tracking-wider text-white/50 font-sans">التاريخ والوقت</div>
+          <div className="text-xl font-bold text-[#D4AF37]">
+            {formatDate(dateStart)}
+          </div>
+          {dateEnd && (
+            <div className="text-sm text-white/70">
+              حتى: {formatDate(dateEnd)}
             </div>
-          </div>
-        </OrnamentBorder>
-
-        <GoldDivider />
-
-        <OrnamentBorder className="w-full">
-          <Countdown targetDate={dateStart} accentColor="#D4AF37" bgColor="rgba(255,255,255,0.05)" />
-        </OrnamentBorder>
-
-        <GoldDivider />
-
-        {/* Names + Rings */}
-        <div className="flex flex-col items-center gap-3">
-          <div className="flex items-center gap-2 text-sm tracking-[6px] font-semibold" style={{ color: '#D4AF37' }}>
-            <span className="text-xs">✦</span><span>زفاف</span><span className="text-xs">✦</span>
-          </div>
-          <div className="flex items-center gap-5">
-            <span className="text-3xl font-bold italic" style={{ color: '#D4AF37', fontFamily: 'var(--font-playfair), serif' }}>{brideName}</span>
-            <span className="text-3xl opacity-70">💍</span>
-            <span className="text-3xl font-bold italic" style={{ color: '#D4AF37', fontFamily: 'var(--font-playfair), serif' }}>{groomName}</span>
-          </div>
-          <div className="flex items-center gap-2 mt-1">
-            <span className="w-16 h-[1px]" style={{ background: '#D4AF3740' }} />
-            <span className="text-xs" style={{ color: '#D4AF3780' }}>✦</span>
-            <span className="w-16 h-[1px]" style={{ background: '#D4AF3740' }} />
-          </div>
+          )}
         </div>
 
-        {photoAlbumSection && <><GoldDivider /><div className="w-full">{photoAlbumSection}</div></>}
-        {rsvpSection && <><GoldDivider /><div className="w-full">{rsvpSection}</div></>}
-        {commentsSection && <><GoldDivider /><div className="w-full">{commentsSection}</div></>}
-        {musicPlayerSection && <div className="w-full mt-2">{musicPlayerSection}</div>}
+        {/* Venue details */}
+        <div className="my-6 p-6 bg-white/5 rounded-2xl border border-[#D4AF37]/20 w-full flex flex-col gap-4">
+          <div className="text-sm uppercase tracking-wider text-white/50 font-sans">مكان الحفل</div>
+          <div className="text-lg font-bold text-[#f5f0e8]">{venueName}</div>
+          {venueMapUrl && (
+            <a 
+              href={venueMapUrl} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 py-3 px-6 bg-[#D4AF37] hover:bg-[#D4AF37]/90 text-[#1a1a2e] rounded-full font-bold transition-all hover:scale-[1.02] active:scale-[0.98] w-full shadow-md font-sans"
+            >
+              عرض الموقع على الخريطة
+            </a>
+          )}
+        </div>
 
-        <button onClick={handleShare}
-          className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-sm transition-all hover:opacity-90 active:scale-[0.98] mt-4"
-          style={{ background: '#D4AF37', color: '#0D0D1E', boxShadow: '0 4px 20px rgba(212,175,55,0.25)' }}>
-          {copied ? <Check className="h-5 w-5" /> : <Share2 className="h-5 w-5" />}
-          <span>{copied ? 'تم نسخ الرابط!' : 'شارك مع الأصناب'}</span>
-        </button>
+        {/* Photo Album */}
+        {photoAlbumSection && (
+          <div className="w-full my-8">
+            {photoAlbumSection}
+          </div>
+        )}
 
-        <GoldDots />
+        {/* RSVP Section */}
+        {rsvpSection && (
+          <div className="w-full my-8">
+            {rsvpSection}
+          </div>
+        )}
+
+        {/* Comments Section */}
+        {commentsSection && (
+          <div className="w-full my-8">
+            {commentsSection}
+          </div>
+        )}
+
+        {/* Music Player */}
+        {musicPlayerSection && (
+          <div className="w-full mt-4 font-sans">
+            {musicPlayerSection}
+          </div>
+        )}
+
+        <Sparkles className="h-6 w-6 text-[#D4AF37]/40 mt-8" />
       </div>
     </div>
   );

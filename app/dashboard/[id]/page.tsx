@@ -11,10 +11,14 @@ import { Toggle } from '@/components/ui/Toggle';
 import { Textarea } from '@/components/ui/Textarea';
 import { 
   ArrowRight, Users, MessageSquare, Edit3, Share2, 
-  Trash2, Search, Check, X, Copy, ExternalLink, Calendar 
+  Trash2, Search, Check, X, Copy, ExternalLink, Calendar, Eye 
 } from 'lucide-react';
 import Link from 'next/link';
 import { Invitation, Guest, Comment } from '@/types';
+import { ProgressBar } from '@/components/builder/ProgressBar';
+import { Step1 } from '@/components/builder/Step1';
+import { Step2 } from '@/components/builder/Step2';
+import { Step3 } from '@/components/builder/Step3';
 
 type Tab = 'edit' | 'rsvp' | 'comments';
 
@@ -25,6 +29,7 @@ export default function EditInvitationPage() {
   const invitationId = params.id as string;
 
   const [activeTab, setActiveTab] = useState<Tab>('edit');
+  const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -94,8 +99,10 @@ export default function EditInvitationPage() {
     setFormData((prev: any) => ({ ...prev, ...updates }));
   };
 
-  const handleSaveChanges = async () => {
+  const handleSaveChanges = async (publish?: boolean) => {
     setIsSaving(true);
+    const finalPublishState = publish !== undefined ? publish : formData.is_published;
+    
     try {
       const { error } = await supabase
         .from('invitations')
@@ -119,12 +126,17 @@ export default function EditInvitationPage() {
           music_file_url: formData.music_file_url || null,
           photo_album_enabled: formData.photo_album_enabled,
           photo_album_urls: formData.photo_album_urls,
-          is_published: formData.is_published,
+          guest_album_enabled: formData.guest_album_enabled || false,
+          guest_album_approval: formData.guest_album_approval || 'auto',
+          guest_album_stopped: formData.guest_album_stopped || false,
+          is_published: finalPublishState,
         })
         .eq('id', invitationId);
 
       if (error) throw error;
       alert('تم حفظ التغييرات بنجاح!');
+      // Update local state to reflect the publish status
+      updateField({ is_published: finalPublishState });
     } catch (err: any) {
       console.error('Error saving invitation:', err.message);
       alert('فشل حفظ البيانات: ' + err.message);
@@ -238,6 +250,15 @@ export default function EditInvitationPage() {
           </div>
 
           <div className="flex items-center gap-2.5 w-full sm:w-auto">
+            <a
+              href={`/${formData?.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-3 py-2.5 text-sm font-semibold border border-borderBlush rounded-full hover:bg-white/50 transition-colors text-textDark/70"
+            >
+              <Eye className="h-4 w-4" />
+              <span>{t('preview')}</span>
+            </a>
             <Button variant="outline" onClick={handleCopyLink} className="flex-1 sm:flex-initial py-3 text-sm border-borderBlush">
               {copied ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
               <span>{copied ? t('copied') : t('copyLink')}</span>
@@ -277,109 +298,37 @@ export default function EditInvitationPage() {
 
         {/* Tab Contents */}
         <div className="bg-white/60 backdrop-blur-md border border-borderBlush p-6 md:p-8 rounded-3xl shadow-sm w-full">
-          {activeTab === 'edit' && (
+          {activeTab === 'edit' && formData && (
             <div className="flex flex-col gap-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input
-                  label={t('groomName')}
-                  value={formData.groom_name}
-                  onChange={(e) => updateField({ groom_name: e.target.value })}
-                />
-                <Input
-                  label={t('brideName')}
-                  value={formData.bride_name}
-                  onChange={(e) => updateField({ bride_name: e.target.value })}
-                />
-              </div>
+              <ProgressBar currentStep={step} />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input
-                  label={t('customSlug')}
-                  value={formData.slug}
-                  onChange={(e) => updateField({ slug: e.target.value.toLowerCase() })}
-                  dir="ltr"
-                  className="text-left font-mono"
-                />
-                <Input
-                  label={t('venueName')}
-                  value={formData.venue_name}
-                  onChange={(e) => updateField({ venue_name: e.target.value })}
-                />
-              </div>
+              <div className="mt-4">
+                {step === 1 && (
+                  <Step1
+                    data={formData}
+                    onChange={updateField}
+                    onNext={() => setStep(2)}
+                  />
+                )}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input
-                  type="datetime-local"
-                  label={t('startDate')}
-                  value={formData.date_start ? formData.date_start.substring(0, 16) : ''}
-                  onChange={(e) => updateField({ date_start: e.target.value })}
-                  dir="ltr"
-                  className="text-left"
-                />
-                <Input
-                  type="datetime-local"
-                  label={t('endDate')}
-                  value={formData.date_end ? formData.date_end.substring(0, 16) : ''}
-                  onChange={(e) => updateField({ date_end: e.target.value })}
-                  dir="ltr"
-                  className="text-left"
-                />
-              </div>
+                {step === 2 && (
+                  <Step2
+                    data={formData}
+                    onChange={updateField}
+                    onNext={() => setStep(3)}
+                    onBack={() => setStep(1)}
+                  />
+                )}
 
-              <Input
-                label={t('venueMapUrl')}
-                value={formData.venue_map_url || ''}
-                onChange={(e) => updateField({ venue_map_url: e.target.value })}
-                dir="ltr"
-                className="text-left"
-              />
-
-              <Textarea
-                label={t('welcomeMessage')}
-                value={formData.message || ''}
-                onChange={(e) => updateField({ message: e.target.value })}
-              />
-
-              <div className="flex flex-col gap-2 py-4 border-t border-b border-borderBlush/40">
-                <Toggle
-                  checked={formData.rsvp_enabled}
-                  onChange={(val) => updateField({ rsvp_enabled: val })}
-                  label={t('enableRSVP')}
-                />
-                <Toggle
-                  checked={formData.comments_enabled}
-                  onChange={(val) => updateField({ comments_enabled: val })}
-                  label={t('enableComments')}
-                />
-                <Toggle
-                  checked={formData.photo_album_enabled}
-                  onChange={(val) => updateField({ photo_album_enabled: val })}
-                  label={t('enablePhotoAlbum')}
-                />
-                <Toggle
-                  checked={formData.is_published}
-                  onChange={(val) => updateField({ is_published: val })}
-                  label="نشر الدعوة (تظهر للزوار عند زيارة الرابط)"
-                />
-              </div>
-
-              <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-4">
-                <Button
-                  variant="outline"
-                  onClick={handleDeleteInvitation}
-                  className="w-full sm:w-auto text-red-600 border-red-200 hover:bg-red-50 flex items-center justify-center gap-2 py-3 px-5"
-                >
-                  <Trash2 className="h-4 w-4" />
-                  <span>{t('deleteInvitation')}</span>
-                </Button>
-
-                <Button
-                  onClick={handleSaveChanges}
-                  isLoading={isSaving}
-                  className="w-full sm:w-auto px-10 font-bold py-3.5"
-                >
-                  {t('saveChanges')}
-                </Button>
+                {step === 3 && (
+                  <Step3
+                    data={formData}
+                    onChange={updateField}
+                    onBack={() => setStep(2)}
+                    onSave={(publish) => handleSaveChanges(publish)}
+                    isSaving={isSaving}
+                  />
+                )}
               </div>
             </div>
           )}

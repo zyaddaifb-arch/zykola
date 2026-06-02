@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Cairo, Playfair_Display } from "next/font/google";
+import { Inter, Cairo, Playfair_Display, Amiri } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/components/LanguageProvider";
 
@@ -21,16 +21,31 @@ const playfair = Playfair_Display({
   style: ["normal", "italic"],
 });
 
+const amiri = Amiri({
+  subsets: ["arabic"],
+  variable: "--font-amiri",
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
+});
+
 export const metadata: Metadata = {
-  title: "زيكولا | Zykola - منصة دعوات الزفاف الرقمية",
-  description: "صمّم دعوة زفافك الرقمية الفاخرة بكل سهولة وشاركها مع من تحب برابط مخصص وبطابع فخم ومميز.",
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-    viewportFit: 'cover',
-  },
+  title: "زيكولا | Zykola — دعوات زفاف رقمية فاخرة",
+  description: "صمّم دعوة زفافك الرقمية الفاخرة في دقائق وشاركها مع أحبائك برابط مميز. تصاميم احترافية، موسيقى ترحيبية، وألبوم صور حي.",
+  keywords: ["دعوة زفاف", "دعوة رقمية", "زفاف", "wedding invitation", "zykola", "زيكولا"],
   themeColor: '#8B1A1A',
+  openGraph: {
+    title: "زيكولا — دعوات زفاف رقمية فاخرة",
+    description: "صمّم دعوة زفافك الرقمية الفاخرة في دقائق",
+    type: 'website',
+    locale: 'ar_SA',
+  },
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({
@@ -39,7 +54,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ar" dir="rtl" className={`${inter.variable} ${cairo.variable} ${playfair.variable}`}>
+    <html lang="ar" dir="rtl" className={`${inter.variable} ${cairo.variable} ${playfair.variable} ${amiri.variable}`}>
       <body className="font-cairo antialiased">
         <LanguageProvider>
           {children}

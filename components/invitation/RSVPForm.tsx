@@ -26,7 +26,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ invitationId }) => {
       return;
     }
     if (!status) {
-      setError('يرجى تحديد حالة الحضور');
+      setError(t('rsvpStatusRequired'));
       return;
     }
 
@@ -34,6 +34,19 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ invitationId }) => {
     setError('');
 
     try {
+      // Prevent duplicate: check if guest with same name already RSVPed
+      const { data: existing } = await supabase
+        .from('guests')
+        .select('id')
+        .eq('invitation_id', invitationId)
+        .eq('name', name.trim());
+
+      if (existing && existing.length > 0) {
+        setError(t('rsvpDuplicateError'));
+        setLoading(false);
+        return;
+      }
+
       const { error: insertError } = await supabase
         .from('guests')
         .insert({
@@ -48,7 +61,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ invitationId }) => {
       setSubmitted(true);
     } catch (err: any) {
       console.error('Error submitting RSVP:', err.message);
-      setError('فشل حفظ ردك. يرجى المحاولة مرة أخرى.');
+      setError(t('rsvpSaveError'));
     } finally {
       setLoading(false);
     }
