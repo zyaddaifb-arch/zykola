@@ -29,16 +29,9 @@ const amiri = Amiri({
 });
 
 export const metadata: Metadata = {
-  title: "زيكولا | Zykola — دعوات زفاف رقمية فاخرة",
-  description: "صمّم دعوة زفافك الرقمية الفاخرة في دقائق وشاركها مع أحبائك برابط مميز. تصاميم احترافية، موسيقى ترحيبية، وألبوم صور حي.",
-  keywords: ["دعوة زفاف", "دعوة رقمية", "زفاف", "wedding invitation", "zykola", "زيكولا"],
+  title: "زيكولا | Zykola - منصة دعوات الزفاف الرقمية",
+  description: "صمّم دعوة زفافك الرقمية الفاخرة بكل سهولة وشاركها مع من تحب برابط مخصص وبطابع فخم ومميز.",
   themeColor: '#8B1A1A',
-  openGraph: {
-    title: "زيكولا — دعوات زفاف رقمية فاخرة",
-    description: "صمّم دعوة زفافك الرقمية الفاخرة في دقائق",
-    type: 'website',
-    locale: 'ar_SA',
-  },
 };
 
 export const viewport = {
