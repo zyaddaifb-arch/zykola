@@ -106,17 +106,26 @@ export default function PublicInvitationPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-blush flex items-center justify-center">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary" />
+      <div className="min-h-screen bg-gradient-to-br from-[#FDF5F5] via-[#FAF6F0] to-[#FDF5F5] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="relative w-10 h-10">
+            <div className="absolute inset-0 rounded-full border-2 border-[#d4af37]/20" />
+            <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-[#d4af37] animate-spin" />
+          </div>
+          <span className="text-xs text-[#444650]/60 font-medium tracking-wider">جاري تحميل الدعوة...</span>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-[100dvh] bg-blush flex items-center justify-center p-3 md:p-4">
-        <div className="bg-white/70 border border-borderBlush rounded-2xl md:rounded-3xl p-5 md:p-8 max-w-sm text-center shadow-md flex flex-col items-center gap-3">
-          <h2 className="text-base md:text-lg font-bold text-textDark">{error}</h2>
+      <div className="min-h-[100dvh] bg-gradient-to-br from-[#FDF5F5] via-[#FAF6F0] to-[#FDF5F5] flex items-center justify-center p-3 md:p-4">
+        <div className="bg-white/90 backdrop-blur-xl border border-[#d4af37]/20 rounded-2xl md:rounded-3xl p-6 md:p-8 max-w-sm text-center shadow-xl flex flex-col items-center gap-3">
+          <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center">
+            <svg className="w-6 h-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+          </div>
+          <h2 className="text-base md:text-lg font-bold text-[#00113a]">{error}</h2>
           <Button onClick={() => router.push('/')} variant="outline" className="mt-2 w-full">
             الذهاب للرئيسية
           </Button>
@@ -130,26 +139,36 @@ export default function PublicInvitationPage() {
   // Render Password Lock Screen if not verified
   if (!isPasswordVerified) {
     return (
-      <div className="min-h-screen bg-[#FDF5F5] flex items-center justify-center p-3 md:p-4">
-        <div className="w-full max-w-md bg-white/80 border border-borderBlush p-5 md:p-8 rounded-2xl md:rounded-3xl shadow-xl flex flex-col items-center gap-3 md:gap-4 text-center">
-          <Lock className="h-8 w-8 md:h-10 md:w-10 text-primary mb-1 md:mb-2" />
-          <h2 className="text-lg md:text-xl font-bold text-textDark">{t('passwordProtect')}</h2>
-          <p className="text-xs text-textDark/60">{t('passwordRequired')}</p>
+      <div className="min-h-screen bg-gradient-to-br from-[#FDF5F5] via-[#FAF6F0] to-[#FDF5F5] flex items-center justify-center p-3 md:p-4 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10 pointer-events-none" style={{
+          backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><path d="M30 0 C40 15, 20 15, 30 30 C40 45, 20 45, 30 60" fill="none" stroke="%23C9A84C" stroke-width="0.5"/></svg>')`,
+        }} />
+        <div className="w-full max-w-md bg-white/90 backdrop-blur-xl border border-[#d4af37]/20 p-6 md:p-8 rounded-3xl md:rounded-4xl shadow-2xl flex flex-col items-center gap-4 md:gap-5 text-center relative z-10">
+          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#d4af37]/10 to-[#d4af37]/5 flex items-center justify-center border border-[#d4af37]/20">
+            <Lock className="h-7 w-7 text-[#d4af37]" />
+          </div>
+          <div className="space-y-1.5">
+            <h2 className="text-lg md:text-xl font-bold text-[#00113a] font-display">{t('passwordProtect')}</h2>
+            <p className="text-xs text-[#444650]/70 max-w-xs">{t('passwordRequired')}</p>
+          </div>
           <form onSubmit={handlePasswordSubmit} className="w-full flex flex-col gap-3 mt-1 md:mt-2">
             <Input
               type="password"
               value={passwordInput}
               onChange={(e) => setPasswordInput(e.target.value)}
               placeholder="••••••••"
-              className="text-center font-mono text-lg"
+              className="text-center font-mono text-lg border-[#d4af37]/20 focus:border-[#d4af37]/50 bg-white/60"
               dir="ltr"
               required
               autoFocus
             />
             {passwordError && (
-              <span className="text-xs text-red-500 font-semibold">{passwordError}</span>
+              <div className="flex items-center justify-center gap-1.5 text-xs text-red-500 font-medium bg-red-50 px-3 py-2 rounded-lg">
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                {passwordError}
+              </div>
             )}
-            <Button type="submit" className="w-full font-bold mt-1 py-3.5">
+            <Button type="submit" className="w-full font-bold mt-1 py-3.5 bg-gradient-to-l from-[#8B1A1A] to-[#a52a2a] hover:from-[#7A1717] hover:to-[#8B1A1A] shadow-lg hover:shadow-xl transition-all">
               {t('passwordSubmit')}
             </Button>
           </form>
@@ -161,39 +180,55 @@ export default function PublicInvitationPage() {
   // Render Gate / Envelope Screen if verified but not clicked open
   if (!isOpen && !isPlayingVideo) {
     return (
-      <div className="min-h-[100dvh] bg-[#FDF5F5] flex items-center justify-center p-3 md:p-4 relative overflow-hidden" dir="rtl">
-        <div 
-          className="absolute inset-0 opacity-20 pointer-events-none"
-          style={{
-            backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><path d="M30 0 C40 15, 20 15, 30 30 C40 45, 20 45, 30 60" fill="none" stroke="%238B1A1A" stroke-width="0.5"/></svg>')`,
-          }}
-        />
+      <div className="min-h-[100dvh] bg-gradient-to-br from-[#FDF5F5] via-[#FAF6F0] to-[#FDF5F5] flex items-center justify-center p-3 md:p-4 relative overflow-hidden" dir="rtl">
+        {/* Decorative background elements */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div 
+            className="absolute inset-0 opacity-15"
+            style={{
+              backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><path d="M30 0 C40 15, 20 15, 30 30 C40 45, 20 45, 30 60" fill="none" stroke="%23C9A84C" stroke-width="0.5"/></svg>')`,
+            }}
+          />
+          <div className="absolute top-1/4 -left-10 w-40 h-40 rounded-full bg-[#d4af37]/[0.03] blur-3xl" />
+          <div className="absolute bottom-1/4 -right-10 w-52 h-52 rounded-full bg-[#8B1A1A]/[0.03] blur-3xl" />
+        </div>
 
         <motion.div 
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.4, type: 'spring' }}
-          className="w-full max-w-md bg-white border border-[#E8D5D5] p-5 md:p-8 rounded-2xl md:rounded-3xl shadow-2xl flex flex-col items-center text-center gap-4 md:gap-6 relative z-10"
+          transition={{ duration: 0.5, type: 'spring', stiffness: 200, damping: 20 }}
+          className="w-full max-w-md bg-white/90 backdrop-blur-xl border border-[#d4af37]/20 p-6 md:p-8 rounded-3xl shadow-2xl flex flex-col items-center text-center gap-5 md:gap-7 relative z-10"
         >
-          <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-primary/5 flex items-center justify-center text-primary">
-            <MailOpen className="h-6 w-6 md:h-8 md:w-8 text-primary" />
+          {/* Top gold accent line */}
+          <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-60" />
+
+          <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-[#d4af37]/10 to-[#d4af37]/5 flex items-center justify-center border border-[#d4af37]/20">
+            <MailOpen className="h-7 w-7 md:h-9 md:w-9 text-[#d4af37]" />
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <span className="text-[10px] md:text-xs uppercase tracking-wider text-textDark/60 font-semibold">بطاقة دعوة فرح</span>
-            <h1 className="text-xl md:text-3xl font-extrabold text-primary font-playfair mt-1 break-words">
-              {invitation.groom_name} &amp; {invitation.bride_name}
+          <div className="flex flex-col gap-2">
+            <span className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-[#775a19]/70 font-semibold">بطاقة دعوة فرح</span>
+            <h1 className="text-xl md:text-3xl font-extrabold text-[#00113a] font-display mt-1 break-words leading-tight">
+              {invitation.groom_name}
+              <span className="text-[#d4af37] mx-2 text-lg md:text-2xl font-light">&amp;</span>
+              {invitation.bride_name}
             </h1>
           </div>
 
-          <p className="text-xs md:text-sm text-textDark/70 leading-relaxed px-2 md:px-4">
+          <p className="text-xs md:text-sm text-[#444650]/80 leading-relaxed px-2 md:px-6 max-w-sm">
             نتشرف بدعوتكم لمشاركتنا فرحة العمر وتفاصيل يومنا السعيد.
           </p>
 
-          <Button onClick={handleOpenInvitation} className="w-full text-base md:text-lg py-3.5 md:py-4 font-bold rounded-full shadow-md">
+          <Button 
+            onClick={handleOpenInvitation} 
+            className="w-full text-base md:text-lg py-3.5 md:py-4 font-bold rounded-full shadow-lg bg-gradient-to-l from-[#8B1A1A] to-[#a52a2a] hover:from-[#7A1717] hover:to-[#8B1A1A] hover:shadow-xl transition-all active:scale-[0.98]"
+          >
             <span>افتح الدعوة</span>
-            <Heart className="h-4 w-4 md:h-5 md:w-5 fill-white stroke-none" />
+            <Heart className="h-4 w-4 md:h-5 md:w-5 fill-white/30 stroke-none" />
           </Button>
+
+          {/* Bottom gold accent line */}
+          <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-60" />
         </motion.div>
       </div>
     );
@@ -221,7 +256,7 @@ export default function PublicInvitationPage() {
             setIsOpen(true);
             setAudioPlay(true);
           }}
-          className="absolute bottom-10 px-6 py-3 md:py-2 bg-white/20 backdrop-blur-md text-white rounded-full text-sm font-medium hover:bg-white/30 transition-colors min-h-[44px]"
+          className="absolute bottom-10 px-8 py-3 md:py-3 bg-white/15 backdrop-blur-xl text-white rounded-full text-sm font-medium hover:bg-white/25 transition-all min-h-[44px] border border-white/10"
         >
           تخطي
         </button>

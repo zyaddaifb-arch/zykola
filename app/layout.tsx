@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Cairo, Playfair_Display, Amiri } from "next/font/google";
+import { Inter, Cairo, Playfair_Display, Amiri, Reem_Kufi } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/components/LanguageProvider";
 
@@ -28,6 +28,12 @@ const amiri = Amiri({
   style: ["normal", "italic"],
 });
 
+const reemKufi = Reem_Kufi({
+  subsets: ["arabic"],
+  variable: "--font-reemkufi",
+  weight: ["400", "500", "600", "700"],
+});
+
 export const metadata: Metadata = {
   title: "زيكولا | Zykola - منصة دعوات الزفاف الرقمية",
   description: "صمّم دعوة زفافك الرقمية الفاخرة بكل سهولة وشاركها مع من تحب برابط مخصص وبطابع فخم ومميز.",
@@ -47,7 +53,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ar" dir="rtl" className={`${inter.variable} ${cairo.variable} ${playfair.variable} ${amiri.variable}`}>
+    <html lang="ar" dir="rtl" className={`${inter.variable} ${cairo.variable} ${playfair.variable} ${amiri.variable} ${reemKufi.variable}`}>
       <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossOrigin="anonymous" />
       </head>

@@ -99,7 +99,7 @@ export default function DashboardPage() {
           <div>
             <h1 className="text-2xl font-bold text-textDark flex items-center gap-2">
               <span>{t('dashboardTitle')}</span>
-              <span className="text-sm bg-primary/10 text-primary px-3 py-1 rounded-full font-normal">
+              <span className="text-sm bg-primary/10 text-primary px-3 py-1 rounded-full font-normal transition-all hover:scale-105 hover:bg-primary/20 inline-block">
                 {invitations.length} / 1
               </span>
             </h1>
@@ -156,10 +156,10 @@ export default function DashboardPage() {
                     </span>
                   </div>
 
-                  <span className={`text-xs px-3 py-1.5 rounded-full font-bold border ${
+                  <span className={`text-xs px-3 py-1.5 rounded-full font-bold border transition-all hover:scale-105 inline-block ${
                     inv.is_published 
-                      ? 'bg-green-50 text-green-700 border-green-200' 
-                      : 'bg-yellow-50 text-yellow-700 border-yellow-200'
+                      ? 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100' 
+                      : 'bg-yellow-50 text-yellow-700 border-yellow-200 hover:bg-yellow-100'
                   }`}>
                     {inv.is_published ? t('published') : t('draft')}
                   </span>

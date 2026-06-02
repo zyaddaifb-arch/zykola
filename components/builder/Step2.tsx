@@ -94,7 +94,7 @@ export const Step2: React.FC<Step2Props> = ({ data, onChange, onNext, onBack }) 
                         }}
                       />
                       {anim.isNew && (
-                        <div className="absolute top-2 right-2 bg-gradient-to-l from-primary to-[#c94a4a] text-white text-[10px] px-2 py-0.5 rounded-full font-bold flex items-center gap-1 shadow-sm">
+                        <div className="absolute top-2 right-2 bg-gradient-to-l from-primary to-[#c94a4a] text-white text-[10px] px-2 py-0.5 rounded-full font-bold flex items-center gap-1 shadow-sm transition-all hover:scale-105 hover:shadow-md">
                           <Sparkles className="w-3 h-3" /> جديد
                         </div>
                       )}

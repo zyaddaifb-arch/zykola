@@ -384,10 +384,10 @@ export default function EditInvitationPage() {
                         <tr key={guest.id} className="hover:bg-white/50 transition-colors">
                           <td className="px-6 py-4 text-sm font-semibold text-textDark">{guest.name}</td>
                           <td className="px-6 py-4 text-sm text-center">
-                            <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-bold ${
+                            <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-bold transition-all hover:scale-105 ${
                               guest.status === 'confirmed'
-                                ? 'bg-green-50 text-green-700'
-                                : 'bg-red-50 text-red-700'
+                                ? 'bg-green-50 text-green-700 hover:bg-green-100'
+                                : 'bg-red-50 text-red-700 hover:bg-red-100'
                             }`}>
                               {guest.status === 'confirmed' ? t('rsvpYes') : t('rsvpNo')}
                             </span>

@@ -34,6 +34,13 @@ const config: Config = {
         playfair: ["var(--font-playfair)", "serif"],
         inter: ["var(--font-inter)", "sans-serif"],
         amiri: ["var(--font-amiri)", "serif"],
+        reemkufi: ["var(--font-reemkufi)", "sans-serif"],
+      },
+      animation: {
+        'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+        'gold-pulse': 'goldPulse 2s ease-in-out infinite',
+        'float-slow': 'floatSlow 6s ease-in-out infinite',
+        'border-glow': 'borderGlow 2s ease-in-out infinite',
       },
     },
   },

@@ -98,10 +98,10 @@ export const GuestListView: React.FC<GuestListViewProps> = ({ invitationId }) =>
                 <tr key={guest.id} className="hover:bg-white/30 transition-colors">
                   <td className="py-2.5 px-2 text-sm font-semibold text-[#00113a]">{guest.name}</td>
                   <td className="py-2.5 px-2 text-center">
-                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] md:text-xs font-bold ${
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] md:text-xs font-bold transition-all hover:scale-105 ${
                       guest.status === 'confirmed'
-                        ? 'bg-green-50 text-green-700'
-                        : 'bg-red-50 text-red-600'
+                        ? 'bg-green-50 text-green-700 hover:bg-green-100'
+                        : 'bg-red-50 text-red-600 hover:bg-red-100'
                     }`}>
                       {guest.status === 'confirmed' ? 'حاضر' : 'معتذر'}
                     </span>

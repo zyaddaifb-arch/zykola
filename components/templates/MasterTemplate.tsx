@@ -95,11 +95,19 @@ export const MasterTemplate: React.FC<MasterTemplateProps> = ({ invitation }) =>
         .font-display { font-family: 'Playfair Display', serif; }
         
         .glass-panel {
-          background: rgba(255, 255, 255, 0.7);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          border: 1px solid rgba(212, 175, 55, 0.4);
-          box-shadow: 0 8px 32px 0 rgba(0, 17, 58, 0.1);
+          background: rgba(255, 255, 255, 0.75);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border: 1px solid rgba(212, 175, 55, 0.35);
+          box-shadow: 0 8px 32px 0 rgba(0, 17, 58, 0.08), 0 2px 8px rgba(212, 175, 55, 0.06);
+        }
+        .glass-panel::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          background: linear-gradient(135deg, rgba(212,175,55,0.06) 0%, transparent 50%);
+          pointer-events: none;
         }
 
         .glass-input {
@@ -117,7 +125,7 @@ export const MasterTemplate: React.FC<MasterTemplateProps> = ({ invitation }) =>
           display: flex;
           align-items: center;
           justify-content: center;
-          margin: 3rem 0;
+          margin: 2.5rem 0;
         }
         .divider-gold::before, .divider-gold::after {
           content: '';
@@ -149,18 +157,35 @@ export const MasterTemplate: React.FC<MasterTemplateProps> = ({ invitation }) =>
           0% { transform: translateX(-100%) rotate(30deg); }
           100% { transform: translateX(100%) rotate(30deg); }
         }
+
+        .bg-premium-overlay {
+          background: linear-gradient(135deg, rgba(252,249,248,0.55) 0%, rgba(252,249,248,0.3) 50%, rgba(252,249,248,0.55) 100%);
+          backdrop-filter: blur(1px);
+          -webkit-backdrop-filter: blur(1px);
+        }
+
+        .bg-scroll-fade {
+          background: linear-gradient(180deg, rgba(252,249,248,0.9) 0%, rgba(252,249,248,0.4) 50%, rgba(252,249,248,0.9) 100%);
+        }
       `}} />
 
-      {/* Dynamic Background Image */}
+      {/* Dynamic Background Image - Premium treatment */}
       <div 
-        className="fixed inset-0 -z-20 bg-cover bg-center bg-no-repeat"
+        className="fixed inset-0 -z-20 bg-cover bg-center bg-no-repeat scale-105"
         style={{ 
           backgroundImage: bgImage ? `url(${bgImage})` : 'none',
           backgroundColor: '#fcf9f8'
         }}
-      ></div>
-      {/* Overlay to ensure text readability */}
-      <div className="fixed inset-0 -z-10 bg-white/40 backdrop-blur-[2px]"></div>
+      />
+      {/* Premium gradient overlay - preserves image richness while ensuring readability */}
+      <div className="fixed inset-0 -z-10 bg-premium-overlay" />
+      {/* Subtle ambient radial glow */}
+      <div 
+        className="fixed inset-0 -z-10 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(212,175,55,0.04) 0%, transparent 70%)'
+        }}
+      />
 
       {/* Language Switcher (Fixed) */}
       <div className="fixed top-4 md:top-8 left-4 md:left-8 z-50 flex space-x-2 space-x-reverse glass-panel rounded-full px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm">
@@ -193,41 +218,42 @@ export const MasterTemplate: React.FC<MasterTemplateProps> = ({ invitation }) =>
 
         {/* Event Details */}
         <section className="w-full relative">
-          <div className="glass-panel rounded-2xl p-5 md:p-8 text-center relative overflow-hidden">
-            <p className="text-[#00113a] font-medium text-base md:text-lg mb-6 md:mb-8 leading-loose px-2 md:px-4 font-display italic">
+          <div className="glass-panel rounded-2xl p-6 md:p-8 text-center relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-60" />
+            <p className="text-[#00113a] font-medium text-base md:text-lg mb-6 md:mb-8 leading-loose px-2 md:px-4 font-display italic relative">
               {'"' + (message || 'يسعدنا ويشرفنا دعوتكم لحضور حفل زفافنا. نتمنى أن تشاركونا هذه اللحظات السعيدة وتكونون جزءاً من فرحتنا.') + '"'}
             </p>
-            <div className="space-y-3 md:space-y-4">
-              <div className="bg-white/40 border border-[#775a19]/20 rounded-xl p-3 md:p-4 flex justify-between items-center text-xs md:text-sm backdrop-blur-sm gap-2">
+            <div className="space-y-3 md:space-y-4 relative">
+              <div className="bg-white/50 border border-[#d4af37]/20 rounded-xl p-3 md:p-4 flex justify-between items-center text-xs md:text-sm backdrop-blur-sm gap-2 hover:border-[#d4af37]/40 transition-colors group">
                 <div className="min-w-0 flex-1">
-                  <span className="text-[10px] md:text-xs text-[#444650] block text-right mb-0.5 md:mb-1 uppercase tracking-wider">التاريخ</span>
+                  <span className="text-[10px] md:text-xs text-[#775a19] block text-right mb-0.5 md:mb-1 uppercase tracking-wider font-semibold">التاريخ</span>
                   <span className="font-bold text-[#00113a] text-sm md:text-base break-words">{formatArabicDate(date_start)}</span>
                 </div>
-                <div className="text-[#775a19] bg-white p-2 md:p-3 rounded-full shadow-sm border border-[#775a19]/10 shrink-0">
+                <div className="text-[#d4af37] bg-white p-2 md:p-3 rounded-full shadow-sm border border-[#d4af37]/20 shrink-0 group-hover:border-[#d4af37]/40 group-hover:shadow-md transition-all">
                   <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                 </div>
               </div>
-              <div className="bg-white/40 border border-[#775a19]/20 rounded-xl p-3 md:p-4 flex justify-between items-center text-xs md:text-sm backdrop-blur-sm gap-2">
+              <div className="bg-white/50 border border-[#d4af37]/20 rounded-xl p-3 md:p-4 flex justify-between items-center text-xs md:text-sm backdrop-blur-sm gap-2 hover:border-[#d4af37]/40 transition-colors group">
                 <div className="min-w-0 flex-1">
-                  <span className="text-[10px] md:text-xs text-[#444650] block text-right mb-0.5 md:mb-1 uppercase tracking-wider">الوقت</span>
+                  <span className="text-[10px] md:text-xs text-[#775a19] block text-right mb-0.5 md:mb-1 uppercase tracking-wider font-semibold">الوقت</span>
                   <span className="font-bold text-[#00113a] text-sm md:text-base break-words">{formatArabicTime(date_start)} - {formatArabicTime(date_end)}</span>
                 </div>
-                <div className="text-[#775a19] bg-white p-2 md:p-3 rounded-full shadow-sm border border-[#775a19]/10 shrink-0">
+                <div className="text-[#d4af37] bg-white p-2 md:p-3 rounded-full shadow-sm border border-[#d4af37]/20 shrink-0 group-hover:border-[#d4af37]/40 group-hover:shadow-md transition-all">
                   <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </div>
               </div>
-              <div className="bg-white/40 border border-[#775a19]/20 rounded-xl p-3 md:p-4 flex justify-between items-center text-xs md:text-sm backdrop-blur-sm gap-2">
+              <div className="bg-white/50 border border-[#d4af37]/20 rounded-xl p-3 md:p-4 flex justify-between items-center text-xs md:text-sm backdrop-blur-sm gap-2 hover:border-[#d4af37]/40 transition-colors group">
                 <div className="min-w-0 flex-1">
-                  <span className="text-[10px] md:text-xs text-[#444650] block text-right mb-0.5 md:mb-1 uppercase tracking-wider">المكان</span>
+                  <span className="text-[10px] md:text-xs text-[#775a19] block text-right mb-0.5 md:mb-1 uppercase tracking-wider font-semibold">المكان</span>
                   <span className="font-bold text-[#00113a] text-sm md:text-base break-words">{venue_name || 'قاعة الأحلام'}</span>
                 </div>
-                <div className="text-[#775a19] bg-white p-2 md:p-3 rounded-full shadow-sm border border-[#775a19]/10 shrink-0">
+                <div className="text-[#d4af37] bg-white p-2 md:p-3 rounded-full shadow-sm border border-[#d4af37]/20 shrink-0 group-hover:border-[#d4af37]/40 group-hover:shadow-md transition-all">
                   <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 </div>
               </div>
             </div>
             {venue_map_url && (
-              <a href={venue_map_url} target="_blank" rel="noopener noreferrer" className="w-full bg-gradient-to-br from-[#d4af37] to-[#f3e5ab] text-[#00113a] rounded-xl py-3 md:py-4 mt-6 md:mt-8 font-bold text-sm md:text-lg flex items-center justify-center gap-2 md:gap-3 hover:opacity-90 transition shadow-[0_4px_15px_rgba(212,175,55,0.4)] shimmer-button min-h-[44px]">
+              <a href={venue_map_url} target="_blank" rel="noopener noreferrer" className="w-full bg-gradient-to-br from-[#d4af37] to-[#e8c96a] text-[#00113a] rounded-xl py-3 md:py-4 mt-6 md:mt-8 font-bold text-sm md:text-lg flex items-center justify-center gap-2 md:gap-3 hover:opacity-90 transition shadow-[0_4px_20px_rgba(212,175,55,0.35)] hover:shadow-[0_6px_30px_rgba(212,175,55,0.45)] shimmer-button min-h-[44px]">
                 <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
                 افتح في خرائط جوجل
               </a>
@@ -239,9 +265,12 @@ export const MasterTemplate: React.FC<MasterTemplateProps> = ({ invitation }) =>
 
         {/* Countdown & Calendar */}
         <section className="w-full relative">
-          <div className="glass-panel rounded-2xl p-5 md:p-8 text-center relative">
+          <div className="glass-panel rounded-2xl p-6 md:p-8 text-center relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-60" />
             <div className="flex items-center justify-center gap-2 md:gap-3 text-[#775a19] text-xs md:text-sm font-bold mb-6 md:mb-8 uppercase tracking-widest">
+              <span className="h-px w-6 bg-[#d4af37]/40" />
               العد التنازلي
+              <span className="h-px w-6 bg-[#d4af37]/40" />
             </div>
             
             <Countdown targetDate={date_start} />
@@ -251,7 +280,7 @@ export const MasterTemplate: React.FC<MasterTemplateProps> = ({ invitation }) =>
               <button
                 type="button"
                 onClick={handleGoogleCalendar}
-                className="flex-1 bg-white border border-[#775a19]/20 text-[#00113a] rounded-xl py-3 px-3 md:px-4 text-xs md:text-sm font-bold flex items-center justify-center gap-2 hover:bg-gray-50 transition shadow-sm min-h-[44px]"
+                className="flex-1 bg-white/60 border border-[#d4af37]/20 text-[#00113a] rounded-xl py-3 px-3 md:px-4 text-xs md:text-sm font-bold flex items-center justify-center gap-2 hover:bg-white hover:border-[#d4af37]/40 transition-all shadow-sm hover:shadow-md min-h-[44px]"
               >
                 <svg className="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
                 Apple Calendar
@@ -259,7 +288,7 @@ export const MasterTemplate: React.FC<MasterTemplateProps> = ({ invitation }) =>
               <button
                 type="button"
                 onClick={handleGoogleCalendar}
-                className="flex-1 bg-white border border-[#775a19]/20 text-[#00113a] rounded-xl py-3 px-3 md:px-4 text-xs md:text-sm font-bold flex items-center justify-center gap-2 hover:bg-gray-50 transition shadow-sm min-h-[44px]"
+                className="flex-1 bg-white/60 border border-[#d4af37]/20 text-[#00113a] rounded-xl py-3 px-3 md:px-4 text-xs md:text-sm font-bold flex items-center justify-center gap-2 hover:bg-white hover:border-[#d4af37]/40 transition-all shadow-sm hover:shadow-md min-h-[44px]"
               >
                 <svg className="w-4 h-4 md:w-5 md:h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M7.63 12.18c0 1.7 1.38 3.08 3.08 3.08s3.08-1.38 3.08-3.08-1.38-3.08-3.08-3.08-3.08 1.38-3.08 3.08z"/><path d="M21.5 0h-19C1.12 0 0 1.12 0 2.5v19C0 22.88 1.12 24 2.5 24h19c1.38 0 2.5-1.12 2.5-2.5v-19C24 1.12 22.88 0 21.5 0zM12 17.38c-2.86 0-5.19-2.33-5.19-5.19S9.14 7 12 7s5.19 2.33 5.19 5.19-2.32 5.19-5.19 5.19zm8-9.25c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
                 Google Calendar
@@ -275,7 +304,8 @@ export const MasterTemplate: React.FC<MasterTemplateProps> = ({ invitation }) =>
         {/* Photo Gallery */}
         {photo_album_enabled && (
           <>
-            <section className="w-full glass-panel rounded-2xl p-5 md:p-8 text-center relative">
+            <section className="w-full glass-panel rounded-2xl p-6 md:p-8 text-center relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-60" />
               <div className="flex items-center justify-center gap-2 md:gap-3 text-[#00113a] font-display font-bold text-lg md:text-2xl mb-1 md:mb-2">
                 <h2>ألبوم الصور</h2>
               </div>
@@ -283,12 +313,12 @@ export const MasterTemplate: React.FC<MasterTemplateProps> = ({ invitation }) =>
               
               <PhotoAlbum urls={photo_album_urls} />
 
-              <button className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-gradient-to-br from-[#d4af37] to-[#f3e5ab] text-[#00113a] w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(212,175,55,0.4)] hover:opacity-90 transition text-lg md:text-xl shimmer-button z-10">
+              <button className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-gradient-to-br from-[#d4af37] to-[#e8c96a] text-[#00113a] w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center shadow-[0_4px_20px_rgba(212,175,55,0.4)] hover:opacity-90 transition text-lg md:text-xl shimmer-button z-10 hover:scale-105 active:scale-95 border border-[#d4af37]/20">
                 <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
               </button>
             </section>
             <div className="divider-gold w-full max-w-[200px] md:max-w-[250px]">
-              <svg className="mx-auto text-[#775a19]" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L15.09 8.91L24 12L15.09 15.09L12 24L8.91 15.09L0 12L8.91 8.91Z"/></svg>
+              <svg className="mx-auto text-[#d4af37]" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L15.09 8.91L24 12L15.09 15.09L12 24L8.91 15.09L0 12L8.91 8.91Z"/></svg>
             </div>
           </>
         )}
@@ -296,7 +326,8 @@ export const MasterTemplate: React.FC<MasterTemplateProps> = ({ invitation }) =>
         {/* RSVP / Guestbook Form */}
         {rsvp_enabled && (
           <>
-            <section className="w-full glass-panel rounded-2xl p-5 md:p-8 text-center">
+            <section className="w-full glass-panel rounded-2xl p-6 md:p-8 text-center relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-60" />
               <div className="flex items-center justify-center gap-2 md:gap-3 text-[#00113a] font-display font-bold text-lg md:text-2xl mb-1 md:mb-2">
                 <h2>تأكيد الحضور وسجل الضيوف</h2>
               </div>
@@ -305,15 +336,17 @@ export const MasterTemplate: React.FC<MasterTemplateProps> = ({ invitation }) =>
               <GuestListView invitationId={invitation.id} />
             </section>
             <div className="divider-gold w-full max-w-[200px] md:max-w-[250px]">
-              <svg className="mx-auto text-[#775a19]" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L15.09 8.91L24 12L15.09 15.09L12 24L8.91 15.09L0 12L8.91 8.91Z"/></svg>
+              <svg className="mx-auto text-[#d4af37]" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L15.09 8.91L24 12L15.09 15.09L12 24L8.91 15.09L0 12L8.91 8.91Z"/></svg>
             </div>
           </>
         )}
 
         {/* Comments & Congratulations */}
         {comments_enabled && (
-          <section className="w-full glass-panel rounded-2xl p-5 md:p-8">
+          <section className="w-full glass-panel rounded-2xl p-6 md:p-8 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-60" />
             <div className="flex items-center gap-2 md:gap-3 text-[#00113a] font-display font-bold text-lg md:text-2xl mb-6 md:mb-8 justify-center">
+              <svg className="w-5 h-5 text-[#d4af37]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/></svg>
               <h2>التهاني والتعليقات</h2>
             </div>
             <Comments invitationId={invitation.id} />
@@ -323,9 +356,9 @@ export const MasterTemplate: React.FC<MasterTemplateProps> = ({ invitation }) =>
         {/* Footer */}
         <footer className="w-full flex flex-col items-center text-center pt-8 md:pt-12 pb-12 md:pb-16">
           <div className="divider-gold w-full max-w-[200px] md:max-w-[250px]">
-            <svg className="mx-auto text-[#775a19]" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L15.09 8.91L24 12L15.09 15.09L12 24L8.91 15.09L0 12L8.91 8.91Z"/></svg>
+            <svg className="mx-auto text-[#d4af37]" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L15.09 8.91L24 12L15.09 15.09L12 24L8.91 15.09L0 12L8.91 8.91Z"/></svg>
           </div>
-          <div className="text-[#775a19] text-xs md:text-sm mb-4 md:mb-6 tracking-widest uppercase font-display">زفاف</div>
+          <div className="text-[#d4af37] text-xs md:text-sm mb-4 md:mb-6 tracking-widest uppercase font-display font-semibold">زفاف</div>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 mb-6 md:mb-8 drop-shadow-sm px-2 w-full">
             <span className="font-calligraphy text-3xl md:text-5xl lg:text-6xl text-[#00113a] font-bold break-words max-w-full">{bride_name}</span>
             <div className="w-10 h-10 md:w-16 md:h-16 flex items-center justify-center shrink-0">
@@ -336,7 +369,7 @@ export const MasterTemplate: React.FC<MasterTemplateProps> = ({ invitation }) =>
             </div>
             <span className="font-calligraphy text-3xl md:text-5xl lg:text-6xl text-[#00113a] font-bold break-words max-w-full">{groom_name}</span>
           </div>
-          <div className="flex gap-2 md:gap-3 text-[#775a19] mb-6 md:mb-10">
+          <div className="flex gap-2 md:gap-3 text-[#d4af37] mb-6 md:mb-10">
             <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L15.09 8.91L24 12L15.09 15.09L12 24L8.91 15.09L0 12L8.91 8.91Z"/></svg>
             <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L15.09 8.91L24 12L15.09 15.09L12 24L8.91 15.09L0 12L8.91 8.91Z"/></svg>
             <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L15.09 8.91L24 12L15.09 15.09L12 24L8.91 15.09L0 12L8.91 8.91Z"/></svg>
@@ -344,7 +377,7 @@ export const MasterTemplate: React.FC<MasterTemplateProps> = ({ invitation }) =>
           <button
             type="button"
             onClick={handleWhatsAppShare}
-            className="w-full max-w-xs bg-gradient-to-br from-[#d4af37] to-[#f3e5ab] text-[#00113a] rounded-full py-3.5 md:py-4 text-sm md:text-base font-bold flex items-center justify-center gap-2 md:gap-3 hover:opacity-90 transition shadow-[0_4px_15px_rgba(212,175,55,0.4)] shimmer-button min-h-[44px]"
+            className="w-full max-w-xs bg-gradient-to-br from-[#d4af37] to-[#e8c96a] text-[#00113a] rounded-full py-3.5 md:py-4 text-sm md:text-base font-bold flex items-center justify-center gap-2 md:gap-3 hover:opacity-90 transition-all shadow-[0_4px_20px_rgba(212,175,55,0.35)] hover:shadow-[0_6px_30px_rgba(212,175,55,0.45)] shimmer-button min-h-[44px] hover:scale-[1.02] active:scale-[0.98]"
           >
             شارك عبر واتساب
             <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
