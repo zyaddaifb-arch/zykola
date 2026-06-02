@@ -48,6 +48,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl" className={`${inter.variable} ${cairo.variable} ${playfair.variable} ${amiri.variable}`}>
+      <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossOrigin="anonymous" />
+      </head>
       <body className="font-cairo antialiased">
         <LanguageProvider>
           {children}

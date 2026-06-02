@@ -44,9 +44,9 @@ export const PhotoAlbum: React.FC<PhotoAlbumProps> = ({ urls }) => {
             <button
               type="button"
               onClick={() => setActiveIdx(null)}
-              className="absolute top-6 right-6 text-white/80 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors"
+              className="absolute top-4 md:top-6 right-4 md:right-6 text-white/80 hover:text-white p-3 md:p-2 rounded-full hover:bg-white/10 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
             >
-              <X className="h-6 w-6" />
+              <X className="h-5 w-5 md:h-6 md:w-6" />
             </button>
 
             {urls.length > 1 && (
@@ -54,16 +54,16 @@ export const PhotoAlbum: React.FC<PhotoAlbumProps> = ({ urls }) => {
                 <button
                   type="button"
                   onClick={() => setActiveIdx((prev) => (prev! === 0 ? urls.length - 1 : prev! - 1))}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors"
+                  className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white p-3 md:p-2 rounded-full hover:bg-white/10 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
                 >
-                  <ChevronLeft className="h-8 w-8" />
+                  <ChevronLeft className="h-6 w-6 md:h-8 md:w-8" />
                 </button>
                 <button
                   type="button"
                   onClick={() => setActiveIdx((prev) => (prev! === urls.length - 1 ? 0 : prev! + 1))}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors"
+                  className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white p-3 md:p-2 rounded-full hover:bg-white/10 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
                 >
-                  <ChevronRight className="h-8 w-8" />
+                  <ChevronRight className="h-6 w-6 md:h-8 md:w-8" />
                 </button>
               </>
             )}

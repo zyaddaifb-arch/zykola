@@ -29,10 +29,9 @@ export default function PreviewInvitationPage() {
 
   if (!invitation) {
     return (
-      <div className="min-h-[100dvh] bg-blush flex items-center justify-center p-4">
-        <div className="bg-white/70 border border-borderBlush rounded-3xl p-8 w-full max-w-sm text-center shadow-md flex flex-col items-center gap-3">
-          <span className="text-3xl text-primary">⚠️</span>
-          <h2 className="text-lg font-bold text-textDark">لا توجد بيانات معاينة متاحة.</h2>
+      <div className="min-h-[100dvh] bg-blush flex items-center justify-center p-3 md:p-4">
+        <div className="bg-white/70 border border-borderBlush rounded-2xl md:rounded-3xl p-5 md:p-8 w-full max-w-sm text-center shadow-md flex flex-col items-center gap-3">
+          <h2 className="text-base md:text-lg font-bold text-textDark">لا توجد بيانات معاينة متاحة.</h2>
           <Button onClick={() => window.close()} variant="outline" className="mt-2 w-full">
             إغلاق الصفحة
           </Button>
@@ -62,26 +61,26 @@ export default function PreviewInvitationPage() {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.4, type: 'spring' }}
-            className="w-full max-w-sm bg-white border border-[#E8D5D5] p-6 md:p-8 rounded-3xl shadow-2xl flex flex-col items-center text-center gap-5 relative z-10"
+            className="w-full max-w-sm bg-white border border-[#E8D5D5] p-5 md:p-8 rounded-2xl md:rounded-3xl shadow-2xl flex flex-col items-center text-center gap-4 md:gap-5 relative z-10"
           >
-            <div className="w-14 h-14 rounded-full bg-primary/5 flex items-center justify-center text-primary">
-              <MailOpen className="h-7 w-7 text-primary" />
+            <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-primary/5 flex items-center justify-center text-primary">
+              <MailOpen className="h-6 w-6 md:h-7 md:w-7 text-primary" />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <span className="text-xs uppercase tracking-wider text-textDark/60 font-semibold">معاينة بطاقة الفرح</span>
-              <h1 className="text-2xl md:text-3xl font-extrabold text-primary font-playfair mt-1">
+              <span className="text-[10px] md:text-xs uppercase tracking-wider text-textDark/60 font-semibold">معاينة بطاقة الفرح</span>
+              <h1 className="text-xl md:text-3xl font-extrabold text-primary font-playfair mt-1 break-words">
                 {invitation.groom_name || 'العريس'} &amp; {invitation.bride_name || 'العروسة'}
               </h1>
             </div>
 
-            <p className="text-sm text-textDark/70 leading-relaxed">
+            <p className="text-xs md:text-sm text-textDark/70 leading-relaxed">
               هذه هي شاشة مغلف الدخول الترحيبية التي سيراها زوار موقع دعوتكم.
             </p>
 
-            <Button onClick={handleOpenEnvelope} className="w-full text-base md:text-lg py-4 font-bold rounded-full shadow-md">
+            <Button onClick={handleOpenEnvelope} className="w-full text-base md:text-lg py-3.5 md:py-4 font-bold rounded-full shadow-md">
               <span>افتح المعاينة</span>
-              <Heart className="h-5 w-5 fill-white stroke-none" />
+              <Heart className="h-4 w-4 md:h-5 md:w-5 fill-white stroke-none" />
             </Button>
           </motion.div>
         </div>

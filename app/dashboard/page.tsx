@@ -180,22 +180,22 @@ export default function DashboardPage() {
                   </a>
                 </div>
 
-                <div className="grid grid-cols-3 gap-3 mt-2">
-                  <Link href={`/dashboard/${inv.id}`} className="col-span-1">
-                    <Button variant="outline" className="w-full flex items-center justify-center gap-2 border border-borderBlush py-4 text-base font-bold bg-white hover:bg-gray-50">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 mt-2">
+                  <Link href={`/dashboard/${inv.id}`} className="w-full">
+                    <Button variant="outline" className="w-full flex items-center justify-center gap-2 border border-borderBlush py-3 sm:py-4 text-sm sm:text-base font-bold bg-white hover:bg-gray-50">
                       <Edit className="h-4 w-4" />
                       <span>{t('manage')}</span>
                     </Button>
                   </Link>
 
-                  <a href={`/${inv.slug}`} target="_blank" rel="noopener noreferrer" className="col-span-1">
-                    <Button variant="primary" className="w-full flex items-center justify-center gap-2 py-4 text-base font-bold">
+                  <a href={`/${inv.slug}`} target="_blank" rel="noopener noreferrer" className="w-full">
+                    <Button variant="primary" className="w-full flex items-center justify-center gap-2 py-3 sm:py-4 text-sm sm:text-base font-bold">
                       <Eye className="h-4 w-4" />
                       <span>مشاهدة</span>
                     </Button>
                   </a>
 
-                  <Button variant="outline" onClick={() => handleDelete(inv.id)} className="col-span-1 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 py-4 font-bold flex items-center justify-center gap-2">
+                  <Button variant="outline" onClick={() => handleDelete(inv.id)} className="w-full border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 py-3 sm:py-4 font-bold flex items-center justify-center gap-2 text-sm sm:text-base">
                     <Trash2 className="h-4 w-4" />
                     <span>حذف</span>
                   </Button>

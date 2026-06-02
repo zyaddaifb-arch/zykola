@@ -51,7 +51,7 @@ export const AlRabi3: React.FC<TemplateProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8] text-[#2D2D2D] font-playfair relative overflow-hidden py-12 px-4 selection:bg-[#7C9A7E]/20">
+    <div className="min-h-screen bg-[#F5F0E8] text-[#2D2D2D] font-playfair relative overflow-hidden py-8 md:py-12 px-3 md:px-4 selection:bg-[#7C9A7E]/20">
       {/* Background leaves */}
       <div 
         className="absolute inset-0 opacity-25 pointer-events-none"
@@ -60,35 +60,35 @@ export const AlRabi3: React.FC<TemplateProps> = ({
         }}
       />
 
-      <div className="max-w-xl mx-auto bg-white/60 backdrop-blur-md border border-[#7C9A7E]/30 rounded-3xl p-8 md:p-12 shadow-xl relative z-10 text-center flex flex-col items-center">
+      <div className="max-w-xl mx-auto bg-white/60 backdrop-blur-md border border-[#7C9A7E]/30 rounded-2xl md:rounded-3xl p-5 md:p-12 shadow-xl relative z-10 text-center flex flex-col items-center">
         {/* Flower icon */}
-        <Flower className="h-8 w-8 text-[#7C9A7E] mb-4 animate-pulse" />
+        <Flower className="h-6 w-6 md:h-8 md:w-8 text-[#7C9A7E] mb-3 md:mb-4 animate-pulse" />
 
-        <div className="text-[#7C9A7E] font-medium text-lg tracking-wider mb-2 uppercase font-sans">
+        <div className="text-[#7C9A7E] font-medium text-base md:text-lg tracking-wider mb-2 uppercase font-sans">
           دعوة زفاف ربيعية
         </div>
 
         {/* Groom & Bride Name */}
-        <div className="flex flex-col items-center gap-2 my-6">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-[#7C9A7E] drop-shadow-sm font-playfair">
+        <div className="flex flex-col items-center gap-1 md:gap-2 my-4 md:my-6">
+          <h1 className="text-3xl md:text-5xl font-extrabold text-[#7C9A7E] drop-shadow-sm font-playfair break-words">
             {groomName}
           </h1>
-          <span className="text-[#7C9A7E]/60 my-1 text-xl font-semibold font-sans">مع</span>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-[#7C9A7E] drop-shadow-sm font-playfair">
+          <span className="text-[#7C9A7E]/60 my-1 text-lg md:text-xl font-semibold font-sans">مع</span>
+          <h1 className="text-3xl md:text-5xl font-extrabold text-[#7C9A7E] drop-shadow-sm font-playfair break-words">
             {brideName}
           </h1>
         </div>
 
         {/* Countdown */}
         {countdownSection && (
-          <div className="w-full my-6">
+          <div className="w-full my-4 md:my-6">
             {countdownSection}
           </div>
         )}
 
         {/* Cover Image */}
         {coverImageUrl && (
-          <div className="w-full h-64 relative rounded-2xl overflow-hidden my-6 border-4 border-white shadow-md">
+          <div className="w-full h-48 md:h-64 relative rounded-2xl overflow-hidden my-4 md:my-6 border-4 border-white shadow-md">
             <img 
               src={coverImageUrl} 
               alt="Wedding Cover" 
@@ -99,34 +99,34 @@ export const AlRabi3: React.FC<TemplateProps> = ({
 
         {/* Message */}
         {message && (
-          <div className="my-8 px-4 py-6 border-t border-b border-[#7C9A7E]/20 text-lg text-[#2D2D2D]/90 leading-relaxed font-serif italic max-w-md">
+          <div className="my-6 md:my-8 px-3 md:px-4 py-4 md:py-6 border-t border-b border-[#7C9A7E]/20 text-base md:text-lg text-[#2D2D2D]/90 leading-relaxed font-serif italic max-w-md">
             &quot;{message}&quot;
           </div>
         )}
 
         {/* Date and Time Details */}
-        <div className="my-6 flex flex-col gap-3">
-          <div className="text-sm uppercase tracking-wider text-[#7C9A7E] font-sans">تاريخ يوم الفرح</div>
-          <div className="text-xl font-bold text-[#7C9A7E]">
+        <div className="my-4 md:my-6 flex flex-col gap-2 md:gap-3">
+          <div className="text-xs md:text-sm uppercase tracking-wider text-[#7C9A7E] font-sans">تاريخ يوم الفرح</div>
+          <div className="text-lg md:text-xl font-bold text-[#7C9A7E]">
             {formatDate(dateStart)}
           </div>
           {dateEnd && (
-            <div className="text-sm text-textDark/70 font-sans">
+            <div className="text-xs md:text-sm text-textDark/70 font-sans">
               حتى: {formatDate(dateEnd)}
             </div>
           )}
         </div>
 
         {/* Venue details */}
-        <div className="my-6 p-6 bg-white/80 rounded-2xl border border-[#7C9A7E]/20 w-full flex flex-col gap-4">
-          <div className="text-sm uppercase tracking-wider text-[#7C9A7E] font-sans">مكان الاحتفال</div>
-          <div className="text-lg font-bold text-[#2D2D2D]">{venueName}</div>
+        <div className="my-4 md:my-6 p-4 md:p-6 bg-white/80 rounded-2xl border border-[#7C9A7E]/20 w-full flex flex-col gap-3 md:gap-4">
+          <div className="text-xs md:text-sm uppercase tracking-wider text-[#7C9A7E] font-sans">مكان الاحتفال</div>
+          <div className="text-base md:text-lg font-bold text-[#2D2D2D]">{venueName}</div>
           {venueMapUrl && (
             <a 
               href={venueMapUrl} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 py-3 px-6 bg-[#7C9A7E] hover:bg-[#7C9A7E]/90 text-white rounded-full font-bold transition-all hover:scale-[1.02] active:scale-[0.98] w-full shadow-sm font-sans"
+              className="inline-flex items-center justify-center gap-2 py-3 md:py-3 px-5 md:px-6 bg-[#7C9A7E] hover:bg-[#7C9A7E]/90 text-white rounded-full font-bold transition-all hover:scale-[1.02] active:scale-[0.98] w-full shadow-sm font-sans min-h-[44px] text-sm md:text-base"
             >
               عرض الموقع الجغرافي
             </a>
@@ -135,21 +135,21 @@ export const AlRabi3: React.FC<TemplateProps> = ({
 
         {/* Photo Album */}
         {photoAlbumSection && (
-          <div className="w-full my-8">
+          <div className="w-full my-6 md:my-8">
             {photoAlbumSection}
           </div>
         )}
 
         {/* RSVP Section */}
         {rsvpSection && (
-          <div className="w-full my-8">
+          <div className="w-full my-6 md:my-8">
             {rsvpSection}
           </div>
         )}
 
         {/* Comments Section */}
         {commentsSection && (
-          <div className="w-full my-8">
+          <div className="w-full my-6 md:my-8">
             {commentsSection}
           </div>
         )}
@@ -161,7 +161,7 @@ export const AlRabi3: React.FC<TemplateProps> = ({
           </div>
         )}
 
-        <Flower className="h-6 w-6 text-[#7C9A7E]/40 mt-8" />
+        <Flower className="h-5 w-5 md:h-6 md:w-6 text-[#7C9A7E]/40 mt-6 md:mt-8" />
       </div>
     </div>
   );

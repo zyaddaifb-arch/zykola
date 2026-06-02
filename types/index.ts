@@ -5,8 +5,8 @@ export interface User {
   created_at: string;
 }
 
-export type TemplateId = 'al-naseem' | 'al-layl' | 'al-rabi3';
-export type OpeningStyle = 'fade' | 'slide';
+export type TemplateId = 'al-naseem' | 'al-layl' | 'al-rabi3' | 'mediterranean-gate' | 'alhambra-arch' | 'rustic-garden-arch' | 'chandelier-garden' | 'cairo-citadel' | 'andalusian-frame' | 'white-roses' | 'ottoman-courtyard' | 'royal-palace-night';
+export type OpeningStyle = 'fade' | 'slide' | 'greek_door' | 'tulip_flowers' | 'royal_envelope' | 'cinematic_opening';
 
 export interface Invitation {
   id: string;

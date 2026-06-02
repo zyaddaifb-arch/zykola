@@ -90,10 +90,10 @@ export const Comments: React.FC<CommentsProps> = ({ invitationId }) => {
   };
 
   return (
-    <div className="w-full flex flex-col gap-6 text-start">
-      <div className="p-6 bg-white/50 border border-borderBlush rounded-2xl flex flex-col gap-4">
-        <h3 className="font-bold text-textDark text-lg border-b border-borderBlush pb-3 text-center flex items-center justify-center gap-2">
-          <MessageSquare className="h-5 w-5 text-primary" />
+    <div className="w-full flex flex-col gap-4 md:gap-6 text-start">
+      <div className="p-4 md:p-6 bg-white/50 border border-borderBlush rounded-2xl flex flex-col gap-3 md:gap-4">
+        <h3 className="font-bold text-textDark text-base md:text-lg border-b border-borderBlush pb-2.5 md:pb-3 text-center flex items-center justify-center gap-2">
+          <MessageSquare className="h-4 w-4 md:h-5 md:w-5 text-primary" />
           <span>{t('commentsTitle')}</span>
         </h3>
 

@@ -77,8 +77,8 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ invitationId }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="p-6 bg-white/50 border border-borderBlush rounded-2xl w-full flex flex-col gap-4 text-start">
-      <h3 className="font-bold text-textDark text-lg border-b border-borderBlush pb-3 text-center">
+    <form onSubmit={handleSubmit} className="p-4 md:p-6 bg-white/50 border border-borderBlush rounded-2xl w-full flex flex-col gap-3 md:gap-4 text-start">
+      <h3 className="font-bold text-textDark text-base md:text-lg border-b border-borderBlush pb-2.5 md:pb-3 text-center">
         {t('rsvpConfirm')}
       </h3>
 

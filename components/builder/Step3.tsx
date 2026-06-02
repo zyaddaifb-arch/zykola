@@ -300,7 +300,7 @@ export const Step3: React.FC<Step3Props> = ({
                           <button
                             type="button"
                             onClick={() => removeAlbumImage(index)}
-                            className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white"
+                            className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white sm:opacity-0 sm:group-hover:opacity-100 opacity-100"
                           >
                             <Trash2 className="h-5 w-5" />
                           </button>

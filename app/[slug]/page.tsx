@@ -33,13 +33,21 @@ export default function PublicInvitationPage() {
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
 
   useEffect(() => {
+    if (!slug) return;
+    let cancelled = false;
+
     const fetchInvitation = async () => {
       try {
-        const { data, error: fetchError } = await supabase
-          .from('invitations')
-          .select('*')
-          .eq('slug', slug)
-          .single();
+        const result = await Promise.race([
+          supabase.from('invitations').select('*').eq('slug', slug).single(),
+          new Promise<never>((_, reject) =>
+            setTimeout(() => reject(new Error('timeout')), 15000)
+          ),
+        ]);
+
+        if (cancelled) return;
+
+        const { data, error: fetchError } = result as any;
 
         if (fetchError || !data) {
           setError('لم يتم العثور على هذه الدعوة. يرجى التحقق من الرابط.');
@@ -58,16 +66,17 @@ export default function PublicInvitationPage() {
           setIsPasswordVerified(true);
         }
       } catch (err: any) {
+        if (cancelled) return;
         console.error('Error fetching invitation:', err.message);
-        setError('حدث خطأ أثناء تحميل الدعوة.');
+        setError(err.message === 'timeout' ? 'تعذر تحميل الدعوة، يرجى التحقق من اتصالك بالإنترنت.' : 'حدث خطأ أثناء تحميل الدعوة.');
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
 
-    if (slug) {
-      fetchInvitation();
-    }
+    fetchInvitation();
+
+    return () => { cancelled = true; };
   }, [slug]);
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
@@ -105,11 +114,10 @@ export default function PublicInvitationPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-blush flex items-center justify-center p-4">
-        <div className="bg-white/70 border border-borderBlush rounded-3xl p-8 max-w-sm text-center shadow-md flex flex-col items-center gap-3">
-          <span className="text-3xl text-primary">⚠️</span>
-          <h2 className="text-lg font-bold text-textDark">{error}</h2>
-          <Button onClick={() => router.push('/')} variant="outline" className="mt-2">
+      <div className="min-h-[100dvh] bg-blush flex items-center justify-center p-3 md:p-4">
+        <div className="bg-white/70 border border-borderBlush rounded-2xl md:rounded-3xl p-5 md:p-8 max-w-sm text-center shadow-md flex flex-col items-center gap-3">
+          <h2 className="text-base md:text-lg font-bold text-textDark">{error}</h2>
+          <Button onClick={() => router.push('/')} variant="outline" className="mt-2 w-full">
             الذهاب للرئيسية
           </Button>
         </div>
@@ -122,12 +130,12 @@ export default function PublicInvitationPage() {
   // Render Password Lock Screen if not verified
   if (!isPasswordVerified) {
     return (
-      <div className="min-h-screen bg-[#FDF5F5] flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-white/80 border border-borderBlush p-8 rounded-3xl shadow-xl flex flex-col items-center gap-4 text-center">
-          <Lock className="h-10 w-10 text-primary mb-2" />
-          <h2 className="text-xl font-bold text-textDark">{t('passwordProtect')}</h2>
+      <div className="min-h-screen bg-[#FDF5F5] flex items-center justify-center p-3 md:p-4">
+        <div className="w-full max-w-md bg-white/80 border border-borderBlush p-5 md:p-8 rounded-2xl md:rounded-3xl shadow-xl flex flex-col items-center gap-3 md:gap-4 text-center">
+          <Lock className="h-8 w-8 md:h-10 md:w-10 text-primary mb-1 md:mb-2" />
+          <h2 className="text-lg md:text-xl font-bold text-textDark">{t('passwordProtect')}</h2>
           <p className="text-xs text-textDark/60">{t('passwordRequired')}</p>
-          <form onSubmit={handlePasswordSubmit} className="w-full flex flex-col gap-3 mt-2">
+          <form onSubmit={handlePasswordSubmit} className="w-full flex flex-col gap-3 mt-1 md:mt-2">
             <Input
               type="password"
               value={passwordInput}
@@ -153,7 +161,7 @@ export default function PublicInvitationPage() {
   // Render Gate / Envelope Screen if verified but not clicked open
   if (!isOpen && !isPlayingVideo) {
     return (
-      <div className="min-h-screen bg-[#FDF5F5] flex items-center justify-center p-4 relative overflow-hidden" dir="rtl">
+      <div className="min-h-[100dvh] bg-[#FDF5F5] flex items-center justify-center p-3 md:p-4 relative overflow-hidden" dir="rtl">
         <div 
           className="absolute inset-0 opacity-20 pointer-events-none"
           style={{
@@ -165,26 +173,26 @@ export default function PublicInvitationPage() {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.4, type: 'spring' }}
-          className="w-full max-w-md bg-white border border-[#E8D5D5] p-8 rounded-3xl shadow-2xl flex flex-col items-center text-center gap-6 relative z-10"
+          className="w-full max-w-md bg-white border border-[#E8D5D5] p-5 md:p-8 rounded-2xl md:rounded-3xl shadow-2xl flex flex-col items-center text-center gap-4 md:gap-6 relative z-10"
         >
-          <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center text-primary">
-            <MailOpen className="h-8 w-8 text-primary" />
+          <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-primary/5 flex items-center justify-center text-primary">
+            <MailOpen className="h-6 w-6 md:h-8 md:w-8 text-primary" />
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <span className="text-xs uppercase tracking-wider text-textDark/60 font-semibold">بطاقة دعوة فرح</span>
-            <h1 className="text-3xl font-extrabold text-primary font-playfair mt-1">
+            <span className="text-[10px] md:text-xs uppercase tracking-wider text-textDark/60 font-semibold">بطاقة دعوة فرح</span>
+            <h1 className="text-xl md:text-3xl font-extrabold text-primary font-playfair mt-1 break-words">
               {invitation.groom_name} &amp; {invitation.bride_name}
             </h1>
           </div>
 
-          <p className="text-sm text-textDark/70 leading-relaxed px-4">
+          <p className="text-xs md:text-sm text-textDark/70 leading-relaxed px-2 md:px-4">
             نتشرف بدعوتكم لمشاركتنا فرحة العمر وتفاصيل يومنا السعيد.
           </p>
 
-          <Button onClick={handleOpenInvitation} className="w-full text-lg py-4 font-bold rounded-full shadow-md">
+          <Button onClick={handleOpenInvitation} className="w-full text-base md:text-lg py-3.5 md:py-4 font-bold rounded-full shadow-md">
             <span>افتح الدعوة</span>
-            <Heart className="h-5 w-5 fill-white stroke-none" />
+            <Heart className="h-4 w-4 md:h-5 md:w-5 fill-white stroke-none" />
           </Button>
         </motion.div>
       </div>
@@ -213,7 +221,7 @@ export default function PublicInvitationPage() {
             setIsOpen(true);
             setAudioPlay(true);
           }}
-          className="absolute bottom-10 px-6 py-2 bg-white/20 backdrop-blur-md text-white rounded-full text-sm font-medium hover:bg-white/30 transition-colors"
+          className="absolute bottom-10 px-6 py-3 md:py-2 bg-white/20 backdrop-blur-md text-white rounded-full text-sm font-medium hover:bg-white/30 transition-colors min-h-[44px]"
         >
           تخطي
         </button>

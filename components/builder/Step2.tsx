@@ -85,8 +85,13 @@ export const Step2: React.FC<Step2Props> = ({ data, onChange, onNext, onBack }) 
                         loop 
                         muted 
                         playsInline
+                        preload="metadata"
                         onMouseOver={(e) => (e.target as HTMLVideoElement).play()}
                         onMouseOut={(e) => (e.target as HTMLVideoElement).pause()}
+                        onTouchStart={(e) => {
+                          const video = e.currentTarget;
+                          video.paused ? video.play() : video.pause();
+                        }}
                       />
                       {anim.isNew && (
                         <div className="absolute top-2 right-2 bg-gradient-to-l from-primary to-[#c94a4a] text-white text-[10px] px-2 py-0.5 rounded-full font-bold flex items-center gap-1 shadow-sm">

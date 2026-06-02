@@ -37,14 +37,14 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep }) => {
               currentStep >= s.num ? 'text-primary font-bold' : 'text-textDark/45'
             }`}
           >
-            <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold border ${
+            <span className={`w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-[10px] md:text-xs font-semibold border ${
               currentStep >= s.num 
                 ? 'bg-primary text-white border-primary shadow-sm' 
                 : 'bg-white text-textDark/40 border-borderBlush'
             }`}>
               {s.num}
             </span>
-            <span className="text-xs md:text-sm font-medium">{s.label}</span>
+            <span className="text-[10px] md:text-xs md:text-sm font-medium">{s.label}</span>
           </div>
         ))}
       </div>

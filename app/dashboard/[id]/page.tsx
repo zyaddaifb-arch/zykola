@@ -271,7 +271,7 @@ export default function EditInvitationPage() {
         </div>
 
         {/* Tab Buttons */}
-        <div className="flex border-b border-borderBlush/60 w-full gap-2 overflow-x-auto">
+        <div className="flex border-b border-borderBlush/60 w-full gap-1 md:gap-2 overflow-x-auto scrollbar-hide">
           {[
             { id: 'edit', label: 'تعديل البيانات', icon: Edit3 },
             { id: 'rsvp', label: `المدعوين (${totalAttending})`, icon: Users },
@@ -283,13 +283,13 @@ export default function EditInvitationPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as Tab)}
-                className={`flex items-center gap-2 py-3 px-4 font-semibold text-sm border-b-2 transition-all shrink-0 ${
+                className={`flex items-center gap-1.5 md:gap-2 py-2.5 md:py-3 px-2.5 md:px-4 font-semibold text-xs md:text-sm border-b-2 transition-all shrink-0 whitespace-nowrap ${
                   isActive 
                     ? 'border-primary text-primary' 
                     : 'border-transparent text-textDark/60 hover:text-textDark'
                 }`}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-3.5 w-3.5 md:h-4 md:w-4" />
                 <span>{tab.label}</span>
               </button>
             );
@@ -336,18 +336,18 @@ export default function EditInvitationPage() {
           {activeTab === 'rsvp' && (
             <div className="flex flex-col gap-6">
               {/* RSVP Statistics Cards */}
-              <div className="grid grid-cols-3 gap-4">
-                <div className="bg-green-50 border border-green-200 p-4 rounded-2xl flex flex-col text-center gap-1 shadow-sm">
-                  <span className="text-xl md:text-2xl font-bold text-green-800">{totalAttending}</span>
-                  <span className="text-xs text-green-700 font-semibold">{t('rsvpAttending')}</span>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                <div className="bg-green-50 border border-green-200 p-3 sm:p-4 rounded-2xl flex flex-col text-center gap-1 shadow-sm">
+                  <span className="text-lg sm:text-xl md:text-2xl font-bold text-green-800">{totalAttending}</span>
+                  <span className="text-[10px] sm:text-xs text-green-700 font-semibold">{t('rsvpAttending')}</span>
                 </div>
-                <div className="bg-red-50 border border-red-200 p-4 rounded-2xl flex flex-col text-center gap-1 shadow-sm">
-                  <span className="text-xl md:text-2xl font-bold text-red-700">{declinedGuests.length}</span>
-                  <span className="text-xs text-red-600 font-semibold">{t('rsvpNotAttending')}</span>
+                <div className="bg-red-50 border border-red-200 p-3 sm:p-4 rounded-2xl flex flex-col text-center gap-1 shadow-sm">
+                  <span className="text-lg sm:text-xl md:text-2xl font-bold text-red-700">{declinedGuests.length}</span>
+                  <span className="text-[10px] sm:text-xs text-red-600 font-semibold">{t('rsvpNotAttending')}</span>
                 </div>
-                <div className="bg-gray-50 border border-gray-200 p-4 rounded-2xl flex flex-col text-center gap-1 shadow-sm">
-                  <span className="text-xl md:text-2xl font-bold text-gray-700">{confirmedGuests.length}</span>
-                  <span className="text-xs text-gray-600 font-semibold">عائلات / أفراد</span>
+                <div className="bg-gray-50 border border-gray-200 p-3 sm:p-4 rounded-2xl flex flex-col text-center gap-1 shadow-sm">
+                  <span className="text-lg sm:text-xl md:text-2xl font-bold text-gray-700">{confirmedGuests.length}</span>
+                  <span className="text-[10px] sm:text-xs text-gray-600 font-semibold">عائلات / أفراد</span>
                 </div>
               </div>
 
@@ -402,7 +402,7 @@ export default function EditInvitationPage() {
                             <button
                               type="button"
                               onClick={() => deleteGuest(guest.id)}
-                              className="text-red-500 hover:text-red-700 p-1.5 rounded-full hover:bg-red-50 transition-colors"
+                              className="text-red-500 hover:text-red-700 p-2.5 rounded-full hover:bg-red-50 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>
@@ -439,9 +439,9 @@ export default function EditInvitationPage() {
                       <button
                         type="button"
                         onClick={() => deleteComment(comment.id)}
-                        className="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-colors shrink-0"
+                        className="text-red-500 hover:text-red-700 p-2.5 rounded-full hover:bg-red-50 transition-colors shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center"
                       >
-                        <Trash2 className="h-4.5 w-4.5" />
+                        <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
                   ))}

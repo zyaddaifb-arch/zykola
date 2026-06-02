@@ -86,11 +86,11 @@ export default function AuthPage() {
     <div className="min-h-screen bg-blush flex flex-col">
       <Navbar />
 
-      <div className="flex-1 flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-white/70 backdrop-blur-md border border-borderBlush rounded-3xl p-6 md:p-8 shadow-xl flex flex-col items-center">
-          <Heart className="h-10 w-10 text-primary fill-primary/10 mb-4 animate-pulse" />
+      <div className="flex-1 flex items-center justify-center p-3 md:p-4">
+        <div className="w-full max-w-md bg-white/70 backdrop-blur-md border border-borderBlush rounded-2xl md:rounded-3xl p-5 md:p-8 shadow-xl flex flex-col items-center">
+          <Heart className="h-8 w-8 md:h-10 md:w-10 text-primary fill-primary/10 mb-3 md:mb-4 animate-pulse" />
           
-          <h2 className="text-2xl font-bold text-textDark mb-6">
+          <h2 className="text-xl md:text-2xl font-bold text-textDark mb-4 md:mb-6">
             {isLogin ? t('login') : t('register')}
           </h2>
 
