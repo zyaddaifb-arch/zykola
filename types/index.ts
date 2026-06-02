@@ -28,6 +28,7 @@ export interface Invitation {
   rsvp_enabled: boolean;
   comments_enabled: boolean;
   music_enabled: boolean;
+  animation_enabled: boolean;
   music_url?: string;
   music_file_url?: string;
   photo_album_enabled: boolean;

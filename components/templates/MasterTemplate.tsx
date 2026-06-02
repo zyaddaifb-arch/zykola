@@ -26,13 +26,13 @@ export const MasterTemplate: React.FC<MasterTemplateProps> = ({ invitation }) =>
   } = invitation;
 
   // Format date to Arabic (e.g., الجمعة، 25 ديسمبر 2026)
-  const formatArabicDate = (dateStr: string) => {
+  const formatArabicDate = (dateStr: string | undefined) => {
     if (!dateStr) return '';
     const date = new Date(dateStr);
     return date.toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   };
 
-  const formatArabicTime = (dateStr: string) => {
+  const formatArabicTime = (dateStr: string | undefined) => {
     if (!dateStr) return '';
     const date = new Date(dateStr);
     return date.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
@@ -183,7 +183,7 @@ export const MasterTemplate: React.FC<MasterTemplateProps> = ({ invitation }) =>
               <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C12 6.627 6.627 12 0 12C6.627 12 12 17.373 12 24C12 17.373 17.373 12 24 12C17.373 12 12 6.627 12 0Z" fill="currentColor"></path></svg>
             </div>
             <p className="text-[#00113a] font-medium text-lg mb-8 leading-loose px-4 font-display italic">
-              "{message || 'يسعدنا ويشرفنا دعوتكم لحضور حفل زفافنا. نتمنى أن تشاركونا هذه اللحظات السعيدة وتكونوا جزءاً من فرحتنا.'}"
+              {'"' + (message || 'يسعدنا ويشرفنا دعوتكم لحضور حفل زفافنا. نتمنى أن تشاركونا هذه اللحظات السعيدة وتكونوا جزءاً من فرحتنا.') + '"'}
             </p>
             <div className="space-y-4">
               <div className="bg-white/40 border border-[#775a19]/20 rounded-xl p-4 flex justify-between items-center text-sm backdrop-blur-sm">
