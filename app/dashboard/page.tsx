@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { useLanguage } from '@/components/LanguageProvider';
-import { Navbar } from '@/components/ui/Navbar';
 import { Button } from '@/components/ui/Button';
 import { Heart, Plus, Calendar, Eye, Edit, ExternalLink, LogOut, Trash2 } from 'lucide-react';
 import Link from 'next/link';
@@ -82,7 +81,6 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-blush flex flex-col">
-        <Navbar />
         <div className="flex-grow flex items-center justify-center">
           <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary" />
         </div>
@@ -92,7 +90,6 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-blush flex flex-col">
-      <Navbar />
 
       <main className="flex-grow max-w-5xl mx-auto px-4 py-8 w-full flex flex-col gap-8 text-start">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/60 backdrop-blur-md border border-borderBlush p-6 rounded-3xl shadow-sm">

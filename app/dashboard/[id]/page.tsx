@@ -4,7 +4,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { useLanguage } from '@/components/LanguageProvider';
-import { Navbar } from '@/components/ui/Navbar';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Toggle } from '@/components/ui/Toggle';
@@ -222,7 +221,6 @@ export default function EditInvitationPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-blush flex flex-col">
-        <Navbar />
         <div className="flex-grow flex items-center justify-center">
           <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary" />
         </div>
@@ -232,7 +230,6 @@ export default function EditInvitationPage() {
 
   return (
     <div className="min-h-screen bg-blush flex flex-col">
-      <Navbar />
 
       <main className="flex-grow max-w-5xl mx-auto px-4 py-8 w-full flex flex-col gap-6 text-start">
         {/* Navigation & Header */}
