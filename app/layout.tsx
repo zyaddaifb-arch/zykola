@@ -31,7 +31,6 @@ const amiri = Amiri({
 export const metadata: Metadata = {
   title: "زيكولا | Zykola - منصة دعوات الزفاف الرقمية",
   description: "صمّم دعوة زفافك الرقمية الفاخرة بكل سهولة وشاركها مع من تحب برابط مخصص وبطابع فخم ومميز.",
-  themeColor: '#8B1A1A',
 };
 
 export const viewport = {
@@ -39,6 +38,7 @@ export const viewport = {
   initialScale: 1,
   maximumScale: 1,
   viewportFit: 'cover',
+  themeColor: '#8B1A1A',
 };
 
 export default function RootLayout({
