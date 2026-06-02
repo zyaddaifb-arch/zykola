@@ -1,23 +1,18 @@
 import type { Metadata } from "next";
-import { Inter, Cairo, Playfair_Display, Amiri, Reem_Kufi } from "next/font/google";
+import { Cairo, Playfair_Display, Amiri, Reem_Kufi } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/components/LanguageProvider";
-
-const inter = Inter({ 
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
 
 const cairo = Cairo({ 
   subsets: ["arabic"],
   variable: "--font-cairo",
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const playfair = Playfair_Display({ 
   subsets: ["latin"],
   variable: "--font-playfair",
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
 });
 
@@ -25,7 +20,7 @@ const amiri = Amiri({
   subsets: ["arabic"],
   variable: "--font-amiri",
   weight: ["400", "700"],
-  style: ["normal", "italic"],
+  style: ["normal"],
 });
 
 const reemKufi = Reem_Kufi({
@@ -53,10 +48,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ar" dir="rtl" className={`${inter.variable} ${cairo.variable} ${playfair.variable} ${amiri.variable} ${reemKufi.variable}`}>
-      <head>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossOrigin="anonymous" />
-      </head>
+    <html lang="ar" dir="rtl" className={`${cairo.variable} ${playfair.variable} ${amiri.variable} ${reemKufi.variable}`}>
       <body className="font-cairo antialiased">
         <LanguageProvider>
           {children}

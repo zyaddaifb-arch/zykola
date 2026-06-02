@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Guest } from '@/types';
 import { Check, X } from 'lucide-react';
@@ -12,36 +12,45 @@ interface GuestListViewProps {
 export const GuestListView: React.FC<GuestListViewProps> = ({ invitationId }) => {
   const [guests, setGuests] = useState<Guest[]>([]);
   const [loading, setLoading] = useState(true);
+  const intervalRef = useRef<ReturnType<typeof setInterval>>();
+
+  const fetchGuests = useRef(async () => {
+    try {
+      const { data, error } = await supabase
+        .from('guests')
+        .select('*')
+        .eq('invitation_id', invitationId)
+        .order('created_at', { ascending: true });
+
+      if (!error && data) {
+        setGuests(data);
+      }
+    } catch (err) {
+      console.error('Error fetching guests:', err);
+    } finally {
+      setLoading(false);
+    }
+  });
 
   useEffect(() => {
-    let cancelled = false;
+    fetchGuests.current();
 
-    const fetchGuests = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('guests')
-          .select('*')
-          .eq('invitation_id', invitationId)
-          .order('created_at', { ascending: true });
+    intervalRef.current = setInterval(fetchGuests.current, 10000);
 
-        if (!cancelled && !error && data) {
-          setGuests(data);
-        }
-      } catch (err) {
-        console.error('Error fetching guests:', err);
-      } finally {
-        if (!cancelled) setLoading(false);
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        clearInterval(intervalRef.current);
+      } else {
+        fetchGuests.current();
+        intervalRef.current = setInterval(fetchGuests.current, 10000);
       }
     };
 
-    fetchGuests();
-
-    // Poll for new guests every 10 seconds
-    const interval = setInterval(fetchGuests, 10000);
+    document.addEventListener('visibilitychange', onVisibilityChange);
 
     return () => {
-      cancelled = true;
-      clearInterval(interval);
+      clearInterval(intervalRef.current);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
     };
   }, [invitationId]);
 
